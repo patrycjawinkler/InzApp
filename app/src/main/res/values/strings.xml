@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">InzApp</string>
+    <string name="panel_name">InzApp</string>
+    <string name="welcome_text">Hello User!</string>
+    <string name="email_address">Adres e-mail</string>
+    <string name="password">Hasło</string>
+    <string name="login">Zaloguj się</string>
+    <string name="forgot_passowrd">Zapomniałeś hasła?</string>
+    <string name="no_account">Nie masz konta? Zarejestruj się.</string>
+    <string name="repeat_password">Powtórz hasło</string>
+    <string name="sign_up">Zarejestruj się</string>
+    <string name="already_member">Masz konto? Zaloguj się</string>
+    <string name="my_recipes">Moje przepisy</string>
+    <string name="shopping_list">Lista zakupów</string>
+    <string name="random_recipe">Losuj przepis</string>
+    <string name="give_recipe">Podaj przepis</string>
+    <string name="find_recipe">Znajdź przepis</string>
+</resources>

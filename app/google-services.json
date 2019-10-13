@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "124143879063",
+    "firebase_url": "https://inzapp.firebaseio.com",
+    "project_id": "inzapp",
+    "storage_bucket": "inzapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124143879063:android:d2b76743fc7b3cfc64fad2",
+        "android_client_info": {
+          "package_name": "com.pwinkler.inzapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124143879063-ojo50gf10de1vbsfjitr3iuvif428ps0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pwinkler.inzapp",
+            "certificate_hash": "777ac29ec73a146b010bde3db3b258f484560aa8"
+          }
+        },
+        {
+          "client_id": "124143879063-f6fu27rn3cjcib9666a3497nrcpgckts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbV93Z0wsOk4PSySzO1Q2upwxl-ahfQqc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124143879063-f6fu27rn3cjcib9666a3497nrcpgckts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
