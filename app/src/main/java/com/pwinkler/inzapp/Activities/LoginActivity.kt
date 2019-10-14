@@ -113,7 +113,7 @@ class LoginActivity: AppCompatActivity() {
                 if (task.isSuccessful) {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
-                    Toast.makeText(this@LoginActivity, "Błąd: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LoginActivity, "Wystąpił błąd: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             })
     }
