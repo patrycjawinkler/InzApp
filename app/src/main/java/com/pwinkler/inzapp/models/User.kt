@@ -1,4 +1,4 @@
-package com.pwinkler.inzapp.Models
+package com.pwinkler.inzapp.models
 
 /**
  * Prosta klasa reprezentująca użytkownika

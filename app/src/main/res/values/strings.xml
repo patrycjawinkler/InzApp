@@ -15,4 +15,28 @@
     <string name="random_recipe">Losuj przepis</string>
     <string name="give_recipe">Podaj przepis</string>
     <string name="find_recipe">Znajdź przepis</string>
+    <string name="add_recipe">Dodaj nowy przepis</string>
+    <string name="dish_name">Nazwa dania</string>
+    <string name="ingredients">Składniki</string>
+    <string name="meal_type_text">Typ posiłku</string>
+    <string name="dish_type_text">Typ dania</string>
+    <string name="time_to_prepare">Czas przygotowania</string>
+    <string name="description">Opis przygotowania</string>
+    <string name="add_photo">Dodaj zdjęcie</string>
+
+    <string-array name="meal_types">
+        <item>Śniadanie</item>
+        <item>Obiad</item>
+        <item>Kolacja</item>
+        <item>Deser</item>
+        <item>Przystawka</item>
+        <item>Napój</item>
+    </string-array>
+    <string-array name="dish_types">
+        <item>Mięsne</item>
+        <item>Wegetariańskie</item>
+        <item>Wegańskie</item>
+        <item>Fit</item>
+        <item>Dla dzieci</item>
+    </string-array>
 </resources>

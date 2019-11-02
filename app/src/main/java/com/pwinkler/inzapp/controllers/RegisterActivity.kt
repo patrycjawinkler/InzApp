@@ -1,4 +1,4 @@
-package com.pwinkler.inzapp.Activities
+package com.pwinkler.inzapp.controllers
 
 import android.content.Intent
 import android.os.Bundle

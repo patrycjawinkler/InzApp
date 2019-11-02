@@ -7,7 +7,7 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:background="@drawable/background"
-        tools:context=".Activities.MainActivity">
+        tools:context=".controllers.MainActivity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,17 +49,31 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/view_profile_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="70dp"
                     android:background="@android:color/transparent"
                     android:text="Zobacz profil"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@+id/user_avatar"
-                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/logout_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="70dp"
+                    android:background="@android:color/transparent"
+                    android:text="Wyloguj się"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/view_profile_button"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
@@ -75,6 +89,7 @@
         app:rowCount="2">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/my_recipes_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
@@ -111,6 +126,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/shopping_list_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
@@ -147,6 +163,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/random_recipe_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
@@ -183,6 +200,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/propose_a_recipe_card"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="16dp"
