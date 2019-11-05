@@ -3,11 +3,14 @@ package com.pwinkler.inzapp.controllers
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Layout
+import android.view.View
 import android.widget.Button
 import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.R
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +18,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var recipesListRecycleAdapter: RecipesListRecycleAdapter
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when (view.id) {
+            R.id.my_recipes_card -> goToRecipesListActivity()
+            R.id.shopping_list_card -> goToShoppingListActivity()
+            R.id.random_recipe_card -> goToRandomRecipeActivity()
+            R.id.propose_a_recipe_card -> goToProposeRecipeActivity()
+        }
+    }
 
     /**
      * Jeżeli użytkownik się wylogował to pokazujemy ekran logowania
@@ -56,23 +67,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         val recipesListCV = findViewById<CardView>(R.id.my_recipes_card)
-        recipesListCV.setOnClickListener {
-            startActivity(Intent(this, RecipesListActivity::class.java))
-        }
-
         val shoppingListCV = findViewById<CardView>(R.id.shopping_list_card)
-        shoppingListCV.setOnClickListener {
-            startActivity(Intent(this, ShoppingListActivity::class.java))
-        }
-
         val randomRecipeCV = findViewById<CardView>(R.id.random_recipe_card)
-        randomRecipeCV.setOnClickListener {
-            startActivity(Intent(this, RandomRecipeActivity::class.java))
-        }
-
         val proposeRecipeCV = findViewById<CardView>(R.id.propose_a_recipe_card)
-        proposeRecipeCV.setOnClickListener {
-            startActivity(Intent(this, ProposeRecipeActivity::class.java))
-        }
+
+        recipesListCV.setOnClickListener(clickListener)
+        shoppingListCV.setOnClickListener(clickListener)
+        randomRecipeCV.setOnClickListener(clickListener)
+        proposeRecipeCV.setOnClickListener(clickListener)
+    }
+
+    private fun goToRecipesListActivity() {
+        val intent = Intent(this, RecipesListActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToShoppingListActivity() {
+        val intent = Intent(this, ShoppingListActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToRandomRecipeActivity() {
+        val intent = Intent(this, RandomRecipeActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToProposeRecipeActivity() {
+        val intent = Intent(this, ProposeRecipeActivity::class.java)
+        startActivity(intent)
     }
 }

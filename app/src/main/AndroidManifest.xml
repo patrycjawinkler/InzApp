@@ -35,6 +35,9 @@
         <activity android:name=".controllers.RandomRecipeActivity">
         </activity>
 
+        <activity android:name=".controllers.RecipeActivity">
+        </activity>
+
     </application>
 
 </manifest>
