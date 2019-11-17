@@ -40,9 +40,6 @@
         <activity android:name=".controllers.RecipeActivity">
         </activity>
 
-        <activity android:name=".controllers.AddRecipeActivity">
-        </activity>
-
     </application>
 
 </manifest>

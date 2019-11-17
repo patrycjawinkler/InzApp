@@ -15,12 +15,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val db = FirebaseFirestore.getInstance()
     private val fbAuth = FirebaseAuth.getInstance()
-    private val collectionPath = "recipes"
+    private val collectionPath = "/recipes"
 
     val currentRecipeList = MutableLiveData<List<Recipe>>()
     val currentInviteList = MutableLiveData<ArrayList<String>>()
 
-    fun getAllRecipes() {
+    fun getAllUserRecipes() {
 
         val recipeCollection = db.collection(collectionPath)
 
@@ -32,10 +32,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         val id = recipe.id
                         val name = data["name"] ?: throw NoSuchFieldException()
                         val description = data["description"] ?: throw NoSuchFieldException()
-                        val time_to_prepare =
-                            data["time_to_prepare"] ?: throw NoSuchFieldException()
-                        val meal_type = data["meal_type"] ?: throw NoSuchFieldException()
-                        val dish_type = data["dish_type"] ?: throw NoSuchFieldException()
+                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
+                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
+                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
                         val ingredients = data["ingredients"] ?: arrayListOf("")
                         val users = data["users"] ?: throw NoSuchFieldException()
 
@@ -43,9 +42,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                             id,
                             name as String,
                             description as String,
-                            time_to_prepare as String,
-                            meal_type as String,
-                            dish_type as String,
+                            timeToPrepare as String,
+                            mealType as String,
+                            dishType as String,
                             ingredients as ArrayList<String>,
                             users as List<String>
                         )
@@ -62,7 +61,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      * i na końcu je usuwa
      */
     fun getInvites() {
-
         val uid = fbAuth.currentUser?.uid ?: return
         Log.d("TAG", "Usuwanko: " + fbAuth.currentUser?.uid.toString())
         db.collection("users")
@@ -79,7 +77,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Funkcja, która usuwa z bazy wszystkie zaproszenia użytkownika
      */
-    fun deleteInvites(uid: String) {
+    private fun deleteInvites(uid: String) {
         val data = HashMap<String, Any>()
         data["invites"] = listOf("")
 

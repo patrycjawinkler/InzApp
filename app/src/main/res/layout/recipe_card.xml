@@ -12,7 +12,7 @@
     android:layout_marginBottom="8dp"
     tools:srcCompat="@android:color/holo_orange_light"
     card_view:cardElevation="3dp"
-    android:id="@+id/project_card">
+    android:id="@+id/recipe_card">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recipe_list_item_container"
@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
+        <!--
         <ImageView
             android:id="@+id/dish_image"
             android:layout_width="wrap_content"
@@ -28,14 +29,14 @@
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/dish_example" />
+            tools:srcCompat="@drawable/dish_example" /> -->
 
         <TextView
             android:id="@+id/dish_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="4dp"
@@ -43,7 +44,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.055"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/dish_image"
+            card_view:layout_constraintTop_toTopOf="parent"
             tools:text="Nazwa posiłku" />
 
         <ImageView
@@ -73,7 +74,7 @@
             android:id="@+id/dish_type_ic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             card_view:layout_constraintStart_toEndOf="@+id/time_to_prepare"
             card_view:layout_constraintTop_toBottomOf="@+id/dish_name"

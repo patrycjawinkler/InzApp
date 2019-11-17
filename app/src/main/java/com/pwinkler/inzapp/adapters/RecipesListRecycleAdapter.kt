@@ -1,6 +1,7 @@
 package com.pwinkler.inzapp.adapters
 
 import android.content.Context
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,11 +23,11 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
     : RecyclerView.Adapter<RecipesListRecycleAdapter.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var recipesList = emptyList<Recipe>()
+    private var recipeList = emptyList<Recipe>()
 
     //Zwraca liczbę elementów w liście
     override fun getItemCount(): Int {
-        return recipesList.count()
+        return recipeList.count()
     }
 
     //Zapełnia widok kartami przepisów
@@ -36,7 +37,7 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
 
     //Podpina każdy przepis z listy do widoku
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(recipesList[position])
+        holder.bind(recipeList[position])
     }
 
     /**
@@ -51,7 +52,9 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         val recipeListItemContainer = itemView.findViewById<ConstraintLayout>(R.id.recipe_list_item_container)
         //val dishImageView = itemView.findViewById<ImageView>(R.id.dish_image)
         val dishNameTextView = itemView.findViewById<TextView>(R.id.dish_name)
+        val timeToPrepareIcon = itemView.findViewById<ImageView>(R.id.time_ic)
         val timeToPrepareTextView = itemView.findViewById<TextView>(R.id.time_to_prepare)
+        val dishTypeIcon = itemView.findViewById<ImageView>(R.id.dish_type_ic)
         val dishTypeTextView = itemView.findViewById<TextView>(R.id.dish_type_text)
 
         fun bind(recipe: Recipe) {
@@ -60,7 +63,9 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
 
             //dishImageView?.setImageResource(recipe.imageId)
             dishNameTextView?.text = recipe.name
+            timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
             timeToPrepareTextView?.text = recipe.time_to_prepare
+            dishTypeIcon?.setImageResource(R.drawable.ic_dish_24dp)
             dishTypeTextView?.text = recipe.dish_type
 
             recipeListItemContainer.setOnClickListener {
@@ -73,9 +78,9 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
      *Funkcja odswieżająca adapter i ustawiająca nową listę przepisów
      */
 
-    /**internal fun setRecipeList(recipeList: List<Recipe>){
-        this@RecipesListRecycleAdapter.recipesList = recipesList
+    internal fun setRecipeList(recipeList: List<Recipe>){
+        this@RecipesListRecycleAdapter.recipeList = recipeList
         notifyDataSetChanged()
     }
-    */
+
 }

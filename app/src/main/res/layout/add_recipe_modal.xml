@@ -21,27 +21,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView5"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Dodaj przepis"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <TextView
+            android:id="@+id/add_recipe_toolbar_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_recipe"
             android:textSize="20sp"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/add_recipe_toolbar"
-            app:layout_constraintStart_toStartOf="@+id/add_recipe_toolbar"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
             app:layout_constraintTop_toTopOf="@+id/add_recipe_toolbar" />
 
         <TextView
             android:id="@+id/dish_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="@string/dish_name"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
             app:layout_constraintTop_toBottomOf="@+id/add_recipe_toolbar" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -127,7 +139,7 @@
             app:layout_constraintTop_toBottomOf="@+id/time_to_prepare_text" />
 
         <TextView
-            android:id="@+id/ingredients"
+            android:id="@+id/ingredients_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -138,28 +150,36 @@
             app:layout_constraintTop_toBottomOf="@+id/time_to_prepare_spinner" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/modal_ingredients_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredients">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_right"
+            app:layout_constraintStart_toStartOf="@+id/guideline_left"
+            app:layout_constraintTop_toBottomOf="@+id/ingredients_textview">
 
-            <ImageButton
-                android:id="@+id/ic_delete_ingredient"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_delete_24dp" />
-
-            <EditText
-                android:id="@+id/input_ingredient"
+            <LinearLayout
+                android:id="@+id/ingredient_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/ic_delete_ingredient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_delete_24dp" />
+
+                <EditText
+                    android:id="@+id/input_ingredient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -169,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/modal_ingredients_container"
             app:srcCompat="@drawable/ic_add_circle_24dp" />
 
         <TextView
@@ -223,19 +243,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_photo_text"
             app:srcCompat="@drawable/ic_add_a_photo_24dp" />
-
-        <Button
-            android:id="@+id/add_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/addrecipe_button"
-            android:text="@string/add"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_photo_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

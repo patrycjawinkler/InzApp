@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
     private fun goToRecipesListActivity() {
         val intent = Intent(this, RecipesListActivity::class.java)
         startActivity(intent)
+
     }
 
     private fun goToShoppingListActivity() {

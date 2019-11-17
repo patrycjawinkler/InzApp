@@ -42,8 +42,8 @@
     </string-array>
     <string-array name="time_to_prepare">
         <item>Do 15 min</item>
-        <item>15 – 30 min</item>
-        <item>30 – 60 min</item>
+        <item>15–30 min</item>
+        <item>30–60 min</item>
         <item>Ponad 60 min</item>
     </string-array>
 </resources>
