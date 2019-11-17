@@ -9,5 +9,6 @@ package com.pwinkler.inzapp.models
 
 data class User (
     val uid: String,
-    val email: String
+    val email: String,
+    val invites: List<String>
 )

@@ -23,6 +23,7 @@
     <string name="time_to_prepare">Czas przygotowania</string>
     <string name="description">Opis przygotowania</string>
     <string name="add_photo">Dodaj zdjęcie</string>
+    <string name="add">Dodaj</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>
@@ -38,5 +39,11 @@
         <item>Wegańskie</item>
         <item>Fit</item>
         <item>Dla dzieci</item>
+    </string-array>
+    <string-array name="time_to_prepare">
+        <item>Do 15 min</item>
+        <item>15 – 30 min</item>
+        <item>30 – 60 min</item>
+        <item>Ponad 60 min</item>
     </string-array>
 </resources>

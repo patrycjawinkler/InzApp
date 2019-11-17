@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pwinkler.inzapp.R
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.models.Recipe
@@ -25,6 +26,11 @@ class RecipesListActivity: AppCompatActivity() {
             adapter = recipeRecycleAdapter
             layoutManager = LinearLayoutManager(this@RecipesListActivity)
             setHasFixedSize(true)
+        }
+
+        val recipeFAB = findViewById<FloatingActionButton>(R.id.add_recipes_fab)
+        recipeFAB.setOnClickListener{
+            startActivity(Intent(this, AddRecipeActivity::class.java))
         }
     }
 
