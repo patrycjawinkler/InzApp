@@ -50,7 +50,7 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         //Tworzenie referencji do elementów layoutu
 
         val recipeListItemContainer = itemView.findViewById<ConstraintLayout>(R.id.recipe_list_item_container)
-        //val dishImageView = itemView.findViewById<ImageView>(R.id.dish_image)
+        val dishImageView = itemView.findViewById<ImageView>(R.id.dish_image)
         val dishNameTextView = itemView.findViewById<TextView>(R.id.dish_name)
         val timeToPrepareIcon = itemView.findViewById<ImageView>(R.id.time_ic)
         val timeToPrepareTextView = itemView.findViewById<TextView>(R.id.time_to_prepare)
@@ -61,7 +61,7 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
 
             //Ustawianie wyglądu i nadawanie im funkcjonalności
 
-            //dishImageView?.setImageResource(recipe.imageId)
+            dishImageView?.setImageResource(R.drawable.dish_example)
             dishNameTextView?.text = recipe.name
             timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
             timeToPrepareTextView?.text = recipe.time_to_prepare

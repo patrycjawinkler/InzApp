@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
-        <!--
+
         <ImageView
             android:id="@+id/dish_image"
             android:layout_width="wrap_content"
@@ -29,14 +29,15 @@
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/dish_example" /> -->
+            tools:srcCompat="@drawable/dish_example" />
 
         <TextView
             android:id="@+id/dish_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingBottom="4dp"
@@ -44,7 +45,7 @@
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.055"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/dish_image"
             tools:text="Nazwa posiłku" />
 
         <ImageView

@@ -140,7 +140,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                         if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
                             Toast.makeText(
                                 activity,
-                                "Proszę uzupełnić nazwę dania i opis przygotowania",
+                                "Proszę uzupełnić brakujące pola",
                                 Toast.LENGTH_LONG
                             ).show()
                         } else if (ingredientList.size < 2) {
