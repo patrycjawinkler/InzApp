@@ -56,6 +56,8 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         val timeToPrepareTextView = itemView.findViewById<TextView>(R.id.time_to_prepare)
         val dishTypeIcon = itemView.findViewById<ImageView>(R.id.dish_type_ic)
         val dishTypeTextView = itemView.findViewById<TextView>(R.id.dish_type_text)
+        val mealTypeIcon = itemView.findViewById<ImageView>(R.id.meal_type_ic)
+        val mealTypeTextView = itemView.findViewById<TextView>(R.id.meal_type_text)
 
         fun bind(recipe: Recipe) {
 
@@ -67,6 +69,9 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
             timeToPrepareTextView?.text = recipe.time_to_prepare
             dishTypeIcon?.setImageResource(R.drawable.ic_dish_24dp)
             dishTypeTextView?.text = recipe.dish_type
+            mealTypeIcon?.setImageResource(R.drawable.ic_meal_type_24dp)
+            mealTypeTextView?.text = recipe.meal_type
+
 
             recipeListItemContainer.setOnClickListener {
                 goToRecipe(recipe.id, recipe.name)
