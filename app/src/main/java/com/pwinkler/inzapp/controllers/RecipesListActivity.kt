@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -140,12 +141,13 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
     override fun onDialogPositiveClick(
         name: String,
         description: String,
+        image_id: String,
         time_to_prepare: String,
         meal_type: String,
         dish_type: String,
         ingredients: ArrayList<String>) {
 
-        recipeViewModel.addRecipe(name, description, time_to_prepare, meal_type, dish_type, ingredients)
+        recipeViewModel.addRecipe(name, description, image_id, time_to_prepare, meal_type, dish_type, ingredients)
     }
 
     companion object {

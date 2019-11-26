@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.pwinkler.inzapp.R
 import com.pwinkler.inzapp.models.Recipe
+import com.squareup.picasso.Picasso
 
 /**
  * ViewHolder jest używany, aby przechowywać obiekty w pamięci,
@@ -62,8 +63,7 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         fun bind(recipe: Recipe) {
 
             //Ustawianie wyglądu i nadawanie im funkcjonalności
-
-            dishImageView?.setImageResource(R.drawable.dish_example)
+            //TODO dishImageView
             dishNameTextView?.text = recipe.name
             timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
             timeToPrepareTextView?.text = recipe.time_to_prepare

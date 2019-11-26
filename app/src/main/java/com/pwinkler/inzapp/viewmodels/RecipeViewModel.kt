@@ -1,6 +1,7 @@
 package com.pwinkler.inzapp.viewmodels
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -8,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.storage.StorageReference
 import com.pwinkler.inzapp.models.Recipe
 import java.lang.NullPointerException
 
@@ -15,6 +17,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val db = FirebaseFirestore.getInstance()
     private val fbAuth = FirebaseAuth.getInstance()
+    private lateinit var storage : StorageReference
     private val collectionPath = "/recipes"
 
     val currentRecipeList = MutableLiveData<List<Recipe>>()
@@ -32,6 +35,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         val id = recipe.id
                         val name = data["name"] ?: throw NoSuchFieldException()
                         val description = data["description"] ?: throw NoSuchFieldException()
+                        val image = data["image_id"] ?: throw NoSuchFieldException()
                         val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
                         val mealType = data["meal_type"] ?: throw NoSuchFieldException()
                         val dishType = data["dish_type"] ?: throw NoSuchFieldException()
@@ -42,6 +46,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                             id,
                             name as String,
                             description as String,
+                            image as String,
                             timeToPrepare as String,
                             mealType as String,
                             dishType as String,
@@ -52,7 +57,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 )
             }
             .addOnFailureListener {
-                Toast.makeText(getApplication(), "Pobieranie z bazy ni epowiodło się", Toast.LENGTH_LONG).show()
+                Toast.makeText(getApplication(), "Pobieranie z bazy nie powiodło się", Toast.LENGTH_LONG).show()
             }
     }
 
@@ -89,13 +94,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Funkcja, która dodaje przespis do bazy
      */
-    fun addRecipe(name: String, description: String, time_to_prepare: String,
+    fun addRecipe(name: String, description: String, image_id: String, time_to_prepare: String,
                   meal_type: String, dish_type: String, ingredients: ArrayList<String>) {
 
         //Utwórz nowy dokument i pobierz referencje (id jest tworzone automatycznie)
         val recipeReference = db.collection(collectionPath).document()
 
-        val updatedRecipe = Recipe(recipeReference.id, name, description, time_to_prepare,
+        val updatedRecipe = Recipe(recipeReference.id, name, description, image_id, time_to_prepare,
             meal_type, dish_type, ingredients, null)
 
         recipeReference.set(
@@ -103,6 +108,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 this["id"] = updatedRecipe.id
                 this["name"] = updatedRecipe.name
                 this["description"] = updatedRecipe.description
+                this["image_id"] = updatedRecipe.image_id
                 this["time_to_prepare"] = updatedRecipe.time_to_prepare
                 this["meal_type"] = updatedRecipe.meal_type
                 this["dish_type"] = updatedRecipe.dish_type

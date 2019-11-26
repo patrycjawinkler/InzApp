@@ -1,27 +1,38 @@
 package com.pwinkler.inzapp.fragments
 
-import android.app.ActionBar
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
+import com.google.firebase.storage.UploadTask
 import com.pwinkler.inzapp.R
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
+import com.squareup.picasso.Picasso
 import java.lang.ClassCastException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddRecipeDialogFragment : DialogFragment() {
+
+    private var PICK_IMAGE_REQUST = 1
 
     private lateinit var listener: ModalListener
     private lateinit var dialogView: View
     private var ingredients = 1
+    private lateinit var mImageUri : Uri
 
+    lateinit var storage : FirebaseStorage
+    lateinit var storageReference : StorageReference
 
     /**
      * Interfejs, który RecipesListActivity musi zaimplementować,
@@ -32,6 +43,7 @@ class AddRecipeDialogFragment : DialogFragment() {
         fun onDialogPositiveClick(
             name: String,
             description: String,
+            image_id: String,
             time_to_prepare: String,
             meal_type: String,
             dish_type: String,
@@ -61,13 +73,24 @@ class AddRecipeDialogFragment : DialogFragment() {
             val inflater = activity.layoutInflater
             dialogView = inflater.inflate(R.layout.add_recipe_modal, null)
 
+            storage = FirebaseStorage.getInstance()
+            storageReference = storage.reference
+
             val addNewIngredient = dialogView.findViewById<ImageButton>(R.id.add_ingredient_button)
             addNewIngredient.setOnClickListener {
                 addAnotherIngredient()
             }
             addNewIngredient.setOnLongClickListener {
-                Toast.makeText(activity, "Kliknij, aby dodać nowy składnik", Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(activity, "Kliknij, aby dodać nowy składnik", Toast.LENGTH_LONG).show()
+                true
+            }
+
+            val addImage = dialogView.findViewById<ImageButton>(R.id.add_photo_image)
+            addImage.setOnClickListener {
+                openFileChooser()
+            }
+            addImage.setOnLongClickListener {
+                Toast.makeText(activity, "Kliknij, aby dodać zdjęcie", Toast.LENGTH_LONG).show()
                 true
             }
 
@@ -111,6 +134,8 @@ class AddRecipeDialogFragment : DialogFragment() {
             }
 
 
+            //utworzenie przycisków na ekranie modala
+
             val dialog = builder.run {
                 setView(dialogView)
                     .setPositiveButton("Dodaj przepis", null)
@@ -129,6 +154,31 @@ class AddRecipeDialogFragment : DialogFragment() {
                         val descriptionTextEdit =
                             dialogView.findViewById<EditText>(R.id.input_description)
 
+                        //val photoImageView = dialogView.findViewById<ImageView>(R.id.dish_photo_image_view)
+
+                        val imageRef = storageReference.child("images/" + UUID.randomUUID().toString())
+                        imageRef.putFile(mImageUri)
+
+
+                        /**
+                        //Do analizy
+                        uploadTask.continueWithTask{ task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let {
+                                    throw it
+                                }
+                            }
+                            imageRef.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result
+                            } else {
+                                Log.d("TAG", "Nie udało się uzyskać url")
+                            }
+                        }
+                        */
+
+
                         val ingredientList = arrayListOf<String>()
                         for (i in 0 until ingredientContainer.childCount) {
                             val ingredient = ingredientContainer.getChildAt(i) as LinearLayout
@@ -137,6 +187,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                                 ingredientList.add(text)
                             }
                         }
+
                         if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
                             Toast.makeText(
                                 activity,
@@ -153,6 +204,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                             listener.onDialogPositiveClick(
                                 recipeNameTextEdit.text.toString(),
                                 descriptionTextEdit.text.toString(),
+                                imageRef.downloadUrl.toString(),
                                 timeToPrepareSpinner.selectedItem.toString(),
                                 mealTypeSpinner.selectedItem.toString(),
                                 dishTypeSpinner.selectedItem.toString(),
@@ -168,7 +220,7 @@ class AddRecipeDialogFragment : DialogFragment() {
     /**
      * Funkcja, która umożliwia dodanie kolejnego składnika
      */
-    fun addAnotherIngredient() {
+    private fun addAnotherIngredient() {
         ingredients++
 
         if (ingredients > 20) {
@@ -204,5 +256,29 @@ class AddRecipeDialogFragment : DialogFragment() {
         newIngredient.addView(ingredientInput)
 
         container.addView(newIngredient)
+    }
+
+    private fun openFileChooser() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, PICK_IMAGE_REQUST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        val mImageView = dialogView.findViewById<ImageView>(R.id.dish_photo_image_view)
+
+        if (requestCode == PICK_IMAGE_REQUST && resultCode == RESULT_OK
+            && data != null && data.data != null) {
+            mImageUri = data.data!!
+
+            Picasso
+                .with(context)
+                .load(mImageUri)
+                .resize(1200, 600)
+                .centerCrop()
+                .into(mImageView)
+        }
     }
 }
