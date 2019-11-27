@@ -1,7 +1,6 @@
 package com.pwinkler.inzapp.adapters
 
 import android.content.Context
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +62,9 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         fun bind(recipe: Recipe) {
 
             //Ustawianie wyglądu i nadawanie im funkcjonalności
-            //TODO dishImageView
+            if(recipe.image_id.isNotBlank()){
+                Picasso.get().load(recipe.image_id).into(dishImageView)
+            }
             dishNameTextView?.text = recipe.name
             timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
             timeToPrepareTextView?.text = recipe.time_to_prepare

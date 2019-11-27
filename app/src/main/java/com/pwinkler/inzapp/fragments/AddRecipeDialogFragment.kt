@@ -156,8 +156,47 @@ class AddRecipeDialogFragment : DialogFragment() {
 
                         //val photoImageView = dialogView.findViewById<ImageView>(R.id.dish_photo_image_view)
 
-                        val imageRef = storageReference.child("images/" + UUID.randomUUID().toString())
-                        imageRef.putFile(mImageUri)
+                        val photoUid = UUID.randomUUID().toString()
+                        val imageRef = storageReference.child("images/" + photoUid)
+                        imageRef.putFile(mImageUri).apply {
+                            addOnSuccessListener {
+                                val ingredientList = arrayListOf<String>()
+                                for (i in 0 until ingredientContainer.childCount) {
+                                    val ingredient = ingredientContainer.getChildAt(i) as LinearLayout
+                                    val text = (ingredient.getChildAt(1) as EditText).text.toString()
+                                    if (text.isNotBlank()) {
+                                        ingredientList.add(text)
+                                    }
+                                }
+
+                                if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
+                                    Toast.makeText(
+                                        activity,
+                                        "Proszę uzupełnić brakujące pola",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else if (ingredientList.size < 2) {
+                                    Toast.makeText(
+                                        activity,
+                                        "Proszę uzupełnić składniki",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    imageRef.downloadUrl.addOnSuccessListener {  uri ->
+                                        listener.onDialogPositiveClick(
+                                            recipeNameTextEdit.text.toString(),
+                                            descriptionTextEdit.text.toString(),
+                                            uri.toString(),
+                                            timeToPrepareSpinner.selectedItem.toString(),
+                                            mealTypeSpinner.selectedItem.toString(),
+                                            dishTypeSpinner.selectedItem.toString(),
+                                            ingredientList
+                                        )
+                                        dialog.dismiss()
+                                    }
+                                }
+                            }
+                        }
 
 
                         /**
@@ -179,39 +218,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                         */
 
 
-                        val ingredientList = arrayListOf<String>()
-                        for (i in 0 until ingredientContainer.childCount) {
-                            val ingredient = ingredientContainer.getChildAt(i) as LinearLayout
-                            val text = (ingredient.getChildAt(1) as EditText).text.toString()
-                            if (text.isNotBlank()) {
-                                ingredientList.add(text)
-                            }
-                        }
 
-                        if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
-                            Toast.makeText(
-                                activity,
-                                "Proszę uzupełnić brakujące pola",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else if (ingredientList.size < 2) {
-                            Toast.makeText(
-                                activity,
-                                "Proszę uzupełnić składniki",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            listener.onDialogPositiveClick(
-                                recipeNameTextEdit.text.toString(),
-                                descriptionTextEdit.text.toString(),
-                                imageRef.downloadUrl.toString(),
-                                timeToPrepareSpinner.selectedItem.toString(),
-                                mealTypeSpinner.selectedItem.toString(),
-                                dishTypeSpinner.selectedItem.toString(),
-                                ingredientList
-                            )
-                            dialog.dismiss()
-                        }
                     }
             }
         } ?: throw IllegalStateException("Activity cannot be null")
@@ -274,7 +281,7 @@ class AddRecipeDialogFragment : DialogFragment() {
             mImageUri = data.data!!
 
             Picasso
-                .with(context)
+                .get()
                 .load(mImageUri)
                 .resize(1200, 600)
                 .centerCrop()

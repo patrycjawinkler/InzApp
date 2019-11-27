@@ -35,7 +35,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         val id = recipe.id
                         val name = data["name"] ?: throw NoSuchFieldException()
                         val description = data["description"] ?: throw NoSuchFieldException()
-                        val image = data["image_id"] ?: throw NoSuchFieldException()
+                        val image = data["image_id"] ?: ""
                         val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
                         val mealType = data["meal_type"] ?: throw NoSuchFieldException()
                         val dishType = data["dish_type"] ?: throw NoSuchFieldException()
