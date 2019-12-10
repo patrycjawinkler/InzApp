@@ -9,15 +9,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.pwinkler.inzapp.R
+import com.pwinkler.inzapp.helpers.DpSize
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.add_recipe_modal.view.*
 import java.lang.ClassCastException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -28,8 +33,9 @@ class AddRecipeDialogFragment : DialogFragment() {
 
     private lateinit var listener: ModalListener
     private lateinit var dialogView: View
-    private var ingredients = 1
     private lateinit var mImageUri : Uri
+    private var ingredients = 1
+    private lateinit var dpSize: DpSize
 
     lateinit var storage : FirebaseStorage
     lateinit var storageReference : StorageReference
@@ -53,6 +59,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        dpSize = DpSize(context)
 
         /**Funkcja sprawdza czy Activity implementuje listener,
          * jeśli nie to rzuć exception
@@ -100,6 +107,8 @@ class AddRecipeDialogFragment : DialogFragment() {
                 dialogView.findViewById<Spinner>(R.id.dish_type_spinner)
             val timeToPrepareSpinner =
                 dialogView.findViewById<Spinner>(R.id.time_to_prepare_spinner)
+            val unitSpinner =
+                dialogView.findViewById<Spinner>(R.id.unit_spinner)
 
             /**
              * Podpięcie opcji wyboru pod spinnery
@@ -133,6 +142,15 @@ class AddRecipeDialogFragment : DialogFragment() {
                 timeToPrepareSpinner.adapter = adapter
             }
 
+            ArrayAdapter.createFromResource(
+                activity,
+                R.array.units,
+                android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                unitSpinner.adapter = adapter
+            }
+
 
             //utworzenie przycisków na ekranie modala
 
@@ -154,14 +172,16 @@ class AddRecipeDialogFragment : DialogFragment() {
                         val descriptionTextEdit =
                             dialogView.findViewById<EditText>(R.id.input_description)
 
-                        //val photoImageView = dialogView.findViewById<ImageView>(R.id.dish_photo_image_view)
-
                         val photoUid = UUID.randomUUID().toString()
                         val imageRef = storageReference.child("images/" + photoUid)
                         imageRef.putFile(mImageUri).apply {
                             addOnSuccessListener {
                                 val ingredientList = arrayListOf<String>()
                                 for (i in 0 until ingredientContainer.childCount) {
+                                    val ingredientTextInput = (ingredientContainer.getChildAt(i) as EditText).text.toString()
+                                    if (ingredientTextInput.isNotBlank()) {
+                                        ingredientList.add(ingredientTextInput)
+                                    }
                                     val ingredient = ingredientContainer.getChildAt(i) as LinearLayout
                                     val text = (ingredient.getChildAt(1) as EditText).text.toString()
                                     if (text.isNotBlank()) {
@@ -197,28 +217,6 @@ class AddRecipeDialogFragment : DialogFragment() {
                                 }
                             }
                         }
-
-
-                        /**
-                        //Do analizy
-                        uploadTask.continueWithTask{ task ->
-                            if (!task.isSuccessful) {
-                                task.exception?.let {
-                                    throw it
-                                }
-                            }
-                            imageRef.downloadUrl
-                        }.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val downloadUri = task.result
-                            } else {
-                                Log.d("TAG", "Nie udało się uzyskać url")
-                            }
-                        }
-                        */
-
-
-
                     }
             }
         } ?: throw IllegalStateException("Activity cannot be null")
@@ -230,12 +228,32 @@ class AddRecipeDialogFragment : DialogFragment() {
     private fun addAnotherIngredient() {
         ingredients++
 
+        val unitSpinner =
+            dialogView.findViewById<Spinner>(R.id.unit_spinner)
+
         if (ingredients > 20) {
             return
         }
 
         val container = dialogView.findViewById<LinearLayout>(R.id.modal_ingredients_container)
-        val newIngredient = LinearLayout(activity).apply {
+
+        val ingredientsContainer = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val ingredientInput = EditText(activity).apply {
+            hint = "Nazwa składnika"
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val detailsContainer = LinearLayout(activity).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -247,22 +265,47 @@ class AddRecipeDialogFragment : DialogFragment() {
             setImageResource(R.drawable.ic_delete_24dp)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-        }
-
-        newIngredient.addView(removeIcon)
-
-        val ingredientInput = EditText(activity).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
 
-        newIngredient.addView(ingredientInput)
+        detailsContainer.addView(removeIcon)
 
-        container.addView(newIngredient)
+        val quantityInput = EditText(activity).apply {
+            hint = "Ilość"
+            layoutParams = LinearLayout.LayoutParams(
+                dpSize.dpToPx(100),
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        detailsContainer.addView(quantityInput)
+
+        val unitsSpinner = Spinner(activity).apply {
+
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+
+        detailsContainer.addView(unitsSpinner)
+
+        context?.let {
+            ArrayAdapter.createFromResource(
+                it,
+                R.array.units,
+                android.R.layout.simple_spinner_item
+            ).also { adapter ->
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                unitsSpinner.adapter = adapter
+            }
+        }
+
+        ingredientsContainer.addView(ingredientInput)
+        ingredientsContainer.addView(detailsContainer)
+
+        container.addView(ingredientsContainer)
     }
 
     private fun openFileChooser() {

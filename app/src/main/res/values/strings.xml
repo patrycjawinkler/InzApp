@@ -18,12 +18,14 @@
     <string name="add_recipe">Dodaj nowy przepis</string>
     <string name="dish_name">Nazwa dania</string>
     <string name="ingredients">Składniki</string>
+    <string name="ingredient">Nazwa składnika</string>
     <string name="meal_type_text">Typ posiłku</string>
     <string name="dish_type_text">Typ dania</string>
     <string name="time_to_prepare">Czas przygotowania</string>
     <string name="description">Opis przygotowania</string>
     <string name="add_photo">Dodaj zdjęcie</string>
     <string name="add">Dodaj</string>
+    <string name="quantity">Ilość</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>
@@ -45,5 +47,17 @@
         <item>15–30 min</item>
         <item>30–60 min</item>
         <item>Ponad 60 min</item>
+    </string-array>
+    <string-array name="units">
+        <item>g</item>
+        <item>dg</item>
+        <item>kg</item>
+        <item>ml</item>
+        <item>szt.</item>
+        <item>szkl.</item>
+        <item>opak.</item>
+        <item>łyż.</item>
+        <item>łyżecz.</item>
+        <item>szczypta</item>
     </string-array>
 </resources>

@@ -61,7 +61,8 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
 
         fun bind(recipe: Recipe) {
 
-            //Ustawianie wyglądu i nadawanie im funkcjonalności
+            //Ustawianie komponentów wyglądu i nadawanie im funkcjonalności
+
             if(recipe.image_id.isNotBlank()){
                 Picasso.get().load(recipe.image_id).into(dishImageView)
             }

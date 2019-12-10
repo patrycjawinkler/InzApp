@@ -1,7 +1,5 @@
 package com.pwinkler.inzapp.models
 
-import android.net.Uri
-
 data class Recipe(
     val id: String,
     val name: String,
