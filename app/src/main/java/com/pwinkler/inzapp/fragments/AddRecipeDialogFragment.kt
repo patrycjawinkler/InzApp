@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -38,7 +39,6 @@ class AddRecipeDialogFragment : DialogFragment() {
     private lateinit var listener: ModalListener
     private lateinit var dialogView: View
     private lateinit var mImageUri : Uri
-    private lateinit var mIngredientId : String
     private lateinit var dpSize: DpSize
 
     private var ingredients = 1
@@ -46,8 +46,10 @@ class AddRecipeDialogFragment : DialogFragment() {
     lateinit var storage : FirebaseStorage
     lateinit var storageReference : StorageReference
 
-    private val db = FirebaseFirestore.getInstance()
-    private val collectionPath = "/products"
+    val db = FirebaseFirestore.getInstance()
+    val collectionPath = "/products"
+
+    val ingredientList = arrayListOf<String>()
 
     /**
      * Interfejs, który RecipesListActivity musi zaimplementować,
@@ -93,21 +95,20 @@ class AddRecipeDialogFragment : DialogFragment() {
             storage = FirebaseStorage.getInstance()
             storageReference = storage.reference
 
-
-            val addNewIngredient =
-                dialogView.findViewById<ImageButton>(R.id.add_ingredient_button)
             val ingredientContainer =
                 dialogView.findViewById<LinearLayout>(R.id.modal_ingredients_container)
 
-            val ingredientList = arrayListOf<String>()
+            for (i in 0 until ingredientContainer.childCount) {
+                val ingredientsLayoutVertical = ingredientContainer.getChildAt(i) as LinearLayout
+                val detailsLayoutHorizontal = ingredientsLayoutVertical.getChildAt(1) as LinearLayout
+                val addIngredientToBaseImageButton = detailsLayoutHorizontal.getChildAt(2) as ImageButton
 
-            addNewIngredient.setOnClickListener {
-                for (i in 0 until ingredientContainer.childCount) {
-                    val ingredientsLayoutVertical = ingredientContainer.getChildAt(i) as LinearLayout
-                    val ingredientNameTextInput = (ingredientsLayoutVertical.getChildAt(i) as EditText).text.toString()
-                    val detailsLayoutHorizontal = ingredientsLayoutVertical.getChildAt(1) as LinearLayout
-                    val ingredientQuantityTextInput = (detailsLayoutHorizontal.getChildAt(1) as EditText).text.toString()
-                    val ingredientUnitSpinner = (detailsLayoutHorizontal.getChildAt(2) as Spinner).selectedItem.toString()
+                addIngredientToBaseImageButton.setOnClickListener {
+
+                    //umieszczam je tutaj, bo w momencie naciśniecią przycisku, pola muszą być uzupełnione
+                    val ingredientNameTextInput = (ingredientsLayoutVertical.getChildAt(0) as EditText).text.toString()
+                    val ingredientQuantityTextInput = (detailsLayoutHorizontal.getChildAt(0) as EditText).text.toString()
+                    val ingredientUnitSpinner = (detailsLayoutHorizontal.getChildAt(1) as Spinner).selectedItem.toString()
 
                     if (ingredientNameTextInput.isBlank() || ingredientQuantityTextInput.isBlank() || ingredientUnitSpinner.isBlank()) {
                         Toast.makeText(activity, "Proszę uzupełnić szczegóły składników", Toast.LENGTH_LONG).show()
@@ -126,17 +127,33 @@ class AddRecipeDialogFragment : DialogFragment() {
                             SetOptions.merge()
                         )
                         ingredientList.add(productReference.id)
+                        Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
                     }
-                    addViewsForNewIngredient()
+                }
+
+                addIngredientToBaseImageButton.setOnLongClickListener {
+                    Toast.makeText(activity, "Kliknij, aby przesłać składnik", Toast.LENGTH_LONG).show()
+                    true
                 }
             }
 
-            addNewIngredient.setOnLongClickListener {
+            //Przycisk dodawania nowych składników
+            val addNewIngredientViewsImageButton =
+                dialogView.findViewById<ImageButton>(R.id.add_ingredient_button)
+
+            addNewIngredientViewsImageButton.setOnClickListener {
+                addViewsForNewIngredient()
+            }
+
+            addNewIngredientViewsImageButton.setOnLongClickListener {
                 Toast.makeText(activity, "Kliknij, aby dodać nowy składnik", Toast.LENGTH_LONG).show()
                 true
             }
 
-            val addImage = dialogView.findViewById<ImageButton>(R.id.add_photo_image)
+            //Przycisk dodawania zdjęcia do przepisu
+            val addImage =
+                dialogView.findViewById<ImageButton>(R.id.add_photo_image)
+
             addImage.setOnClickListener {
                 openFileChooser()
             }
@@ -256,6 +273,7 @@ class AddRecipeDialogFragment : DialogFragment() {
      * Funkcja, która umożliwia dodanie kolejnego składnika
      */
     private fun addViewsForNewIngredient() {
+
         ingredients++
 
         if (ingredients > 20) {
@@ -288,16 +306,6 @@ class AddRecipeDialogFragment : DialogFragment() {
             )
         }
 
-        val removeIcon = ImageButton(activity).apply {
-            setImageResource(R.drawable.ic_delete_24dp)
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-
-        detailsContainer.addView(removeIcon)
-
         val quantityInput = EditText(activity).apply {
             hint = "Ilość"
             inputType = 2
@@ -310,10 +318,10 @@ class AddRecipeDialogFragment : DialogFragment() {
         detailsContainer.addView(quantityInput)
 
         val unitsSpinner = Spinner(activity).apply {
-
             layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
+                5.0f
             )
         }
 
@@ -330,10 +338,45 @@ class AddRecipeDialogFragment : DialogFragment() {
             }
         }
 
+        val uploadIcon = ImageButton(activity).apply {
+            setImageResource(R.drawable.ic_check_circle_green_24dp)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.END
+            }
+        }
+
+        detailsContainer.addView(uploadIcon)
+
         ingredientsContainer.addView(ingredientInput)
         ingredientsContainer.addView(detailsContainer)
 
         container.addView(ingredientsContainer)
+
+        //Podpinam działanie nowoutworzonego przycisku
+        uploadIcon.setOnClickListener {
+            if (ingredientInput.text.toString().isBlank() || quantityInput.text.toString().isBlank() || unitsSpinner.selectedItem.toString().isBlank()) {
+                Toast.makeText(activity, "Proszę uzupełnić szczegóły składników", Toast.LENGTH_LONG).show()
+            } else {
+                val productReference = db.collection(collectionPath).document()
+
+                val updatedProduct = Product(productReference.id, ingredientInput.text.toString(), quantityInput.text.toString(), unitsSpinner.selectedItem.toString())
+
+                productReference.set(
+                    HashMap<String, Any>().apply {
+                        this["id"] = updatedProduct.id
+                        this["name"] = updatedProduct.name
+                        this["quantity"] = updatedProduct.quantity
+                        this["unit"] = updatedProduct.unit
+                    },
+                    SetOptions.merge()
+                )
+                ingredientList.add(productReference.id)
+                Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun openFileChooser() {

@@ -181,25 +181,28 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/remove_ingredient_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_delete_24dp" />
-
                     <EditText
                         android:id="@+id/input_quantity"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:hint="@string/quantity"
                         android:inputType="number"
                         android:maxLines="1" />
 
                     <Spinner
                         android:id="@+id/unit_spinner"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_weight="5"
                         app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/upload_ingredient_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        app:srcCompat="@drawable/ic_check_circle_green_24dp" />
 
                 </LinearLayout>
 
