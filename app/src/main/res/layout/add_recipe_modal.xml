@@ -69,7 +69,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_dish_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -161,6 +162,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ingredients_textview">
             
             <LinearLayout
+                android:id="@+id/ingredients_vertical_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
@@ -242,6 +244,7 @@
                 android:inputType="textMultiLine"
                 android:maxLines="8"
                 android:minLines="1"
+                android:textAllCaps="true"
                 android:scrollbars="vertical" />
         </com.google.android.material.textfield.TextInputLayout>
 

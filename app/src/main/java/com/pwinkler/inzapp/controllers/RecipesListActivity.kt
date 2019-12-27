@@ -128,7 +128,6 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         startActivity(intent)
     }
 
-
     /**
      * Funkcja, która pokazuje dialog tworzenia projektu,
      * po naciśnięciu FABa

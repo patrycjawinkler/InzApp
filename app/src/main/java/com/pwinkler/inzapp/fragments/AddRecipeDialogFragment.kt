@@ -14,12 +14,16 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.google.firebase.storage.UploadTask
 import com.pwinkler.inzapp.R
 import com.pwinkler.inzapp.helpers.DpSize
+import com.pwinkler.inzapp.models.Product
+import com.pwinkler.inzapp.viewmodels.ProductViewModel
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.add_recipe_modal.view.*
@@ -34,11 +38,16 @@ class AddRecipeDialogFragment : DialogFragment() {
     private lateinit var listener: ModalListener
     private lateinit var dialogView: View
     private lateinit var mImageUri : Uri
-    private var ingredients = 1
+    private lateinit var mIngredientId : String
     private lateinit var dpSize: DpSize
+
+    private var ingredients = 1
 
     lateinit var storage : FirebaseStorage
     lateinit var storageReference : StorageReference
+
+    private val db = FirebaseFirestore.getInstance()
+    private val collectionPath = "/products"
 
     /**
      * Interfejs, który RecipesListActivity musi zaimplementować,
@@ -80,13 +89,48 @@ class AddRecipeDialogFragment : DialogFragment() {
             val inflater = activity.layoutInflater
             dialogView = inflater.inflate(R.layout.add_recipe_modal, null)
 
+            //Stworzenie referencji do Firebase Storage
             storage = FirebaseStorage.getInstance()
             storageReference = storage.reference
 
-            val addNewIngredient = dialogView.findViewById<ImageButton>(R.id.add_ingredient_button)
+
+            val addNewIngredient =
+                dialogView.findViewById<ImageButton>(R.id.add_ingredient_button)
+            val ingredientContainer =
+                dialogView.findViewById<LinearLayout>(R.id.modal_ingredients_container)
+
+            val ingredientList = arrayListOf<String>()
+
             addNewIngredient.setOnClickListener {
-                addAnotherIngredient()
+                for (i in 0 until ingredientContainer.childCount) {
+                    val ingredientsLayoutVertical = ingredientContainer.getChildAt(i) as LinearLayout
+                    val ingredientNameTextInput = (ingredientsLayoutVertical.getChildAt(i) as EditText).text.toString()
+                    val detailsLayoutHorizontal = ingredientsLayoutVertical.getChildAt(1) as LinearLayout
+                    val ingredientQuantityTextInput = (detailsLayoutHorizontal.getChildAt(1) as EditText).text.toString()
+                    val ingredientUnitSpinner = (detailsLayoutHorizontal.getChildAt(2) as Spinner).selectedItem.toString()
+
+                    if (ingredientNameTextInput.isBlank() || ingredientQuantityTextInput.isBlank() || ingredientUnitSpinner.isBlank()) {
+                        Toast.makeText(activity, "Proszę uzupełnić szczegóły składników", Toast.LENGTH_LONG).show()
+                    } else {
+                        val productReference = db.collection(collectionPath).document()
+
+                        val updatedProduct = Product(productReference.id, ingredientNameTextInput, ingredientQuantityTextInput, ingredientUnitSpinner)
+
+                        productReference.set(
+                            HashMap<String, Any>().apply {
+                                this["id"] = updatedProduct.id
+                                this["name"] = updatedProduct.name
+                                this["quantity"] = updatedProduct.quantity
+                                this["unit"] = updatedProduct.unit
+                            },
+                            SetOptions.merge()
+                        )
+                        ingredientList.add(productReference.id)
+                    }
+                    addViewsForNewIngredient()
+                }
             }
+
             addNewIngredient.setOnLongClickListener {
                 Toast.makeText(activity, "Kliknij, aby dodać nowy składnik", Toast.LENGTH_LONG).show()
                 true
@@ -167,35 +211,21 @@ class AddRecipeDialogFragment : DialogFragment() {
                     .setOnClickListener {
                         val recipeNameTextEdit =
                             dialogView.findViewById<EditText>(R.id.input_dish_name)
-                        val ingredientContainer =
-                            dialogView.findViewById<LinearLayout>(R.id.modal_ingredients_container)
                         val descriptionTextEdit =
                             dialogView.findViewById<EditText>(R.id.input_description)
 
                         val photoUid = UUID.randomUUID().toString()
                         val imageRef = storageReference.child("images/" + photoUid)
+
                         imageRef.putFile(mImageUri).apply {
                             addOnSuccessListener {
-                                val ingredientList = arrayListOf<String>()
-                                for (i in 0 until ingredientContainer.childCount) {
-                                    val ingredientTextInput = (ingredientContainer.getChildAt(i) as EditText).text.toString()
-                                    if (ingredientTextInput.isNotBlank()) {
-                                        ingredientList.add(ingredientTextInput)
-                                    }
-                                    val ingredient = ingredientContainer.getChildAt(i) as LinearLayout
-                                    val text = (ingredient.getChildAt(1) as EditText).text.toString()
-                                    if (text.isNotBlank()) {
-                                        ingredientList.add(text)
-                                    }
-                                }
-
                                 if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
                                     Toast.makeText(
                                         activity,
                                         "Proszę uzupełnić brakujące pola",
                                         Toast.LENGTH_LONG
                                     ).show()
-                                } else if (ingredientList.size < 2) {
+                                } else if (ingredientList.size < 1) {
                                     Toast.makeText(
                                         activity,
                                         "Proszę uzupełnić składniki",
@@ -225,11 +255,8 @@ class AddRecipeDialogFragment : DialogFragment() {
     /**
      * Funkcja, która umożliwia dodanie kolejnego składnika
      */
-    private fun addAnotherIngredient() {
+    private fun addViewsForNewIngredient() {
         ingredients++
-
-        val unitSpinner =
-            dialogView.findViewById<Spinner>(R.id.unit_spinner)
 
         if (ingredients > 20) {
             return
@@ -273,6 +300,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
         val quantityInput = EditText(activity).apply {
             hint = "Ilość"
+            inputType = 2
             layoutParams = LinearLayout.LayoutParams(
                 dpSize.dpToPx(100),
                 LinearLayout.LayoutParams.WRAP_CONTENT

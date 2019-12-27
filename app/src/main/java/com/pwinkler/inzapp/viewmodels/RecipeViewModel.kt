@@ -17,7 +17,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
 
     private val db = FirebaseFirestore.getInstance()
     private val fbAuth = FirebaseAuth.getInstance()
-    private lateinit var storage : StorageReference
+
     private val collectionPath = "/recipes"
 
     val currentRecipeList = MutableLiveData<List<Recipe>>()

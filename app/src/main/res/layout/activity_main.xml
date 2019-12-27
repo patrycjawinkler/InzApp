@@ -19,61 +19,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.mikhaellopez.circularimageview.CircularImageView
-                    android:id="@+id/user_avatar"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="32dp"
-                    android:src="@drawable/avatar"
-                    app:civ_border_color="@color/white"
-                    app:civ_border_width="1dp"
-                    app:civ_shadow="true"
-                    app:civ_shadow_radius="10"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
                     android:id="@+id/nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="32dp"
                     android:layout_marginTop="40dp"
                     android:gravity="center"
-                    android:text="Patrycja Winkler"
+                    android:text="Cześć, Patrycja"
                     android:textColor="@color/white"
                     android:textSize="24sp"
-                    app:layout_constraintStart_toEndOf="@+id/user_avatar"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/view_profile_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="70dp"
-                    android:background="@android:color/transparent"
-                    android:text="Zobacz profil"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/user_avatar"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/logout_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginStart="32dp"
                     android:background="@android:color/transparent"
                     android:text="Wyloguj się"
-                    android:textColor="@color/white"
                     android:textAllCaps="false"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/view_profile_button"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
