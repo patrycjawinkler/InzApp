@@ -7,15 +7,16 @@ import android.text.Layout
 import android.view.View
 import android.widget.Button
 import androidx.cardview.widget.CardView
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
-import com.pwinkler.inzapp.R
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var recipesListRecycleAdapter: RecipesListRecycleAdapter
+    lateinit var navigationView : NavigationView
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val clickListener: View.OnClickListener = View.OnClickListener { view ->
@@ -57,13 +58,37 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //setSupportActionBar(findViewById(R.id.toolbar))
 
-        val logoutButton = findViewById<Button>(R.id.logout_button)
-        logoutButton.setOnClickListener {
-            fbAuth.signOut()
-            finish()
-            startActivity(Intent(this, LoginActivity::class.java))
+        navigationView = findViewById(R.id.navigation_view)
+        navigationView.apply{
+            setHeader(fbAuth.currentUser?.email)
+            setLogoutAction {
+                fbAuth.signOut()
+            }
+            setRecipeListAction {
+                val intent = Intent(this@MainActivity, RecipesListActivity::class.java)
+                startActivity(intent)
+            }
+            setShoppingListAction {
+                val intent = Intent(this@MainActivity, ShoppingListActivity::class.java)
+                startActivity(intent)
+            }
+            setRandomRecipeAction {
+                val intent = Intent(this@MainActivity, RandomRecipeActivity::class.java)
+                startActivity(intent)
+            }
+            setGiveRecipeAction {
+                val intent = Intent(this@MainActivity, ProposeRecipeActivity::class.java)
+                startActivity(intent)
+            }
+            setFavoriteRecipesAction {
+                val intent = Intent(this@MainActivity, FavoriteListActivity::class.java)
+                startActivity(intent)
+            }
+            setChosenRecipesAction {
+                val intent = Intent(this@MainActivity, ChosenListActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         val recipesListCV = findViewById<CardView>(R.id.my_recipes_card)

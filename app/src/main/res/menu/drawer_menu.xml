@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/nav_group">
+
+        <item
+            android:id="@+id/nav_my_recipes"
+            android:icon="@drawable/ic_view_list_50dp"
+            android:title="@string/my_recipes"/>
+
+        <item
+            android:id="@+id/nav_shopping_list"
+            android:icon="@drawable/ic_create_50dp"
+            android:title="@string/shopping_list"/>
+
+        <item
+            android:id="@+id/nav_random_recipe"
+            android:icon="@drawable/ic_shuffle_50dp"
+            android:title="@string/random_recipe"/>
+
+        <item
+            android:id="@+id/nav_give_recipe"
+            android:icon="@drawable/ic_give_recipe_50dp"
+            android:title="@string/give_recipe"/>
+
+        <item
+            android:id="@+id/nav_favorite_recipes"
+            android:icon="@drawable/ic_favorite_24dp"
+            android:title="@string/favorite"/>
+
+        <item
+            android:id="@+id/nav_chosen_recipes"
+            android:icon="@drawable/ic_today_24dp"
+            android:title="@string/chosen"/>
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout_24dp"
+            android:title="@string/logout"/>
+
+    </group>
+
+</menu>

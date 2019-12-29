@@ -14,8 +14,10 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.internal.NavigationMenu
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.pwinkler.inzapp.R
+import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.fragments.AddRecipeDialogFragment
 import com.pwinkler.inzapp.models.Recipe
@@ -26,6 +28,7 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
 
     lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
     lateinit var recipeViewModel: RecipeViewModel
+    lateinit var navigationView: NavigationView
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -52,6 +55,38 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.my_recipes_list)
         setSupportActionBar(findViewById(R.id.my_recipes_toolbar))
+
+        navigationView = findViewById(R.id.navigation_view)
+        navigationView.apply{
+            setHeader(fbAuth.currentUser?.email)
+            setLogoutAction {
+                fbAuth.signOut()
+            }
+            setRecipeListAction {
+                val intent = Intent(this@RecipesListActivity, RecipesListActivity::class.java)
+                startActivity(intent)
+            }
+            setShoppingListAction {
+                val intent = Intent(this@RecipesListActivity, ShoppingListActivity::class.java)
+                startActivity(intent)
+            }
+            setRandomRecipeAction {
+                val intent = Intent(this@RecipesListActivity, RandomRecipeActivity::class.java)
+                startActivity(intent)
+            }
+            setGiveRecipeAction {
+                val intent = Intent(this@RecipesListActivity, ProposeRecipeActivity::class.java)
+                startActivity(intent)
+            }
+            setFavoriteRecipesAction {
+                val intent = Intent(this@RecipesListActivity, FavoriteListActivity::class.java)
+                startActivity(intent)
+            }
+            setChosenRecipesAction {
+                val intent = Intent(this@RecipesListActivity, ChosenListActivity::class.java)
+                startActivity(intent)
+            }
+        }
 
         recipeRecycleAdapter = RecipesListRecycleAdapter(this, ::goToRecipe)
 

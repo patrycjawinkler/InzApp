@@ -40,6 +40,12 @@
         <activity android:name=".controllers.RecipeActivity">
         </activity>
 
+        <activity android:name=".controllers.FavoriteListActivity">
+        </activity>
+
+        <activity android:name=".controllers.ChosenListActivity">
+        </activity>
+
     </application>
 
 </manifest>

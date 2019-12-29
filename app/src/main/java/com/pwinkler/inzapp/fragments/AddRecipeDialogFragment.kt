@@ -238,6 +238,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                         val imageRef = storageReference.child("images/" + photoUid)
 
                         imageRef.putFile(mImageUri).apply {
+                            progressBar.visibility = View.VISIBLE
                             addOnSuccessListener {
                                 if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
                                     Toast.makeText(
@@ -262,9 +263,8 @@ class AddRecipeDialogFragment : DialogFragment() {
                                             dishTypeSpinner.selectedItem.toString(),
                                             ingredientList
                                         )
-                                        progressBar.visibility = View.VISIBLE
-                                        dialog.dismiss()
                                         progressBar.visibility = View.GONE
+                                        dialog.dismiss()
                                     }
                                 }
                             }
@@ -297,6 +297,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
         val ingredientInput = EditText(activity).apply {
             hint = "Nazwa składnika"
+            inputType = 16384
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

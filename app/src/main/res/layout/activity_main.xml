@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_gravity="center"
         android:background="@drawable/login_background_2_png"
         tools:context=".controllers.MainActivity">
 
@@ -25,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="64dp"
                     android:gravity="center"
                     android:text="Cześć, Patrycja"
                     android:textColor="@color/white"
@@ -33,183 +40,183 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/logout_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:background="@android:color/transparent"
-                    android:text="Wyloguj się"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
 
-    <androidx.gridlayout.widget.GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:padding="16dp"
-        app:alignmentMode="alignMargins"
-        app:columnCount="2"
-        app:columnOrderPreserved="false"
-        app:rowCount="2">
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:padding="16dp"
+            app:alignmentMode="alignMargins"
+            app:columnCount="2"
+            app:columnOrderPreserved="false"
+            app:rowCount="2">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/my_recipes_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/my_recipes_card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_background"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_view_list_50dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
                     android:gravity="center"
-                    android:text="@string/my_recipes"
-                    android:textSize="18sp"/>
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_background"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_view_list_50dp"/>
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/my_recipes"
+                        android:textSize="18sp"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/shopping_list_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1">
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp">
+            </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_background"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_create_50dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:gravity="center"
-                    android:text="@string/shopping_list"
-                    android:textSize="18sp"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/random_recipe_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/shopping_list_card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_margin="16dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_background"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_shuffle_50dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/random_recipe"
-                    android:textSize="18sp"/>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_background"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_create_50dp"/>
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/shopping_list"
+                        android:textSize="18sp"/>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/propose_a_recipe_card"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="8dp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1">
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+            </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_background"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_give_recipe_50dp"/>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/random_recipe_card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
                     android:gravity="center"
-                    android:text="@string/give_recipe"
-                    android:textSize="18sp"/>
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_background"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_shuffle_50dp"/>
 
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/random_recipe"
+                        android:textSize="18sp"/>
 
-    </androidx.gridlayout.widget.GridLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/propose_a_recipe_card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="8dp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_background"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_give_recipe_50dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/give_recipe"
+                        android:textSize="18sp"/>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.gridlayout.widget.GridLayout>
 
     </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="false"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/navigation_header"
+        app:itemBackground="?attr/selectableItemBackground"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>

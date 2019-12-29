@@ -5,6 +5,7 @@
     <string name="email_address">Adres e-mail</string>
     <string name="password">Hasło</string>
     <string name="login">Zaloguj się</string>
+    <string name="logout">Wyloguj się</string>
     <string name="forgot_passowrd">Zapomniałeś hasła?</string>
     <string name="your_nickname">Imię</string>
     <string name="no_account">Nie masz konta? Zarejestruj się.</string>
@@ -28,6 +29,10 @@
     <string name="add_ingredient">Dodaj składnik</string>
     <string name="add">Dodaj</string>
     <string name="quantity">Ilość</string>
+    <string name="favorite">Ulubione</string>
+    <string name="chosen">Wybrane</string>
+    <string name="username">Nazwa użytkownika</string>
+    <string name="dish_image">Zdjęcie dania</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>
