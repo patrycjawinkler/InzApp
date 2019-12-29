@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:background="@drawable/background"
+        android:background="@drawable/login_background_2_png"
         tools:context=".controllers.MainActivity">
 
         <RelativeLayout

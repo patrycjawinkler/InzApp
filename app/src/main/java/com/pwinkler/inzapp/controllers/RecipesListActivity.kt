@@ -46,10 +46,7 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         fbAuth.removeAuthStateListener(authStateListener)
     }
 
-    override fun onBackPressed() {
-        finishAffinity()
-        exitProcess(0)
-    }
+    //Funkcja onBackPressed niepotrzebna, ponieważ będziemy się cofać do MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -95,6 +95,9 @@ class AddRecipeDialogFragment : DialogFragment() {
             storage = FirebaseStorage.getInstance()
             storageReference = storage.reference
 
+            val progressBar =
+                dialogView.findViewById<ProgressBar>(R.id.circular_progress_bar)
+
             val ingredientContainer =
                 dialogView.findViewById<LinearLayout>(R.id.modal_ingredients_container)
 
@@ -259,7 +262,9 @@ class AddRecipeDialogFragment : DialogFragment() {
                                             dishTypeSpinner.selectedItem.toString(),
                                             ingredientList
                                         )
+                                        progressBar.visibility = View.VISIBLE
                                         dialog.dismiss()
+                                        progressBar.visibility = View.GONE
                                     }
                                 }
                             }
@@ -398,6 +403,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                 .get()
                 .load(mImageUri)
                 .resize(1200, 600)
+                .placeholder(R.drawable.applogo)
                 .centerCrop()
                 .into(mImageView)
         }

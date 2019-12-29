@@ -29,7 +29,7 @@ class RegisterActivity: AppCompatActivity() {
         val passwordTextView = findViewById<EditText>(R.id.input_password)
 
         /**Podpięcie przycisku, który wywołuje rejestrację**/
-        val signUpButton = findViewById<Button>(R.id.signUpButton)
+        val signUpButton = findViewById<Button>(R.id.sign_up_button)
         signUpButton.setOnClickListener {
             val email = emailTextView.text.toString()
             val password = passwordTextView.text.toString()
@@ -38,6 +38,11 @@ class RegisterActivity: AppCompatActivity() {
             } else {
                 createUser(email, password)
             }
+        }
+
+        val goToLoginPanelButton = findViewById<Button>(R.id.go_to_login_panel_button)
+        goToLoginPanelButton.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 
