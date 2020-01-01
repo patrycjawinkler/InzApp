@@ -33,6 +33,9 @@
     <string name="chosen">Wybrane</string>
     <string name="username">Nazwa użytkownika</string>
     <string name="dish_image">Zdjęcie dania</string>
+    <string name="dish_type_ic">Ikona typu dania</string>
+    <string name="meal_type_ic">Ikona typu posiłku</string>
+    <string name="time_to_prepare_ic">Ikona czasu przygotowania</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

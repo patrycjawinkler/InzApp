@@ -17,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.internal.NavigationMenu
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.fragments.AddRecipeDialogFragment
@@ -28,11 +29,11 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
 
     lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
     lateinit var recipeViewModel: RecipeViewModel
-    lateinit var navigationView: NavigationView
+    private lateinit var navigationView: NavigationView
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+    private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         if(firebaseAuth.currentUser == null) {
             val intent = Intent(this@RecipesListActivity, LoginActivity::class.java)
             startActivity(intent)
@@ -180,6 +181,10 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
 
         recipeViewModel.addRecipe(name, description, image_id, time_to_prepare, meal_type, dish_type, ingredients)
     }
+
+    /**
+     * Const używane w celu identyfkacji przesyłanych danych za pomocą intent.extra
+     */
 
     companion object {
         val EXTRA_RECIPE_ID = "EXTRA_RECIPE_ID"
