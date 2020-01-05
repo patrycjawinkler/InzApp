@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginStart
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -27,16 +28,15 @@ import java.util.*
 
 class RecipeActivity : AppCompatActivity() {
 
-    val recipeCollectionPath = "/recipes"
-    val productCollectionPath = "/products"
+    private val recipeCollectionPath = "/recipes"
+    private val productCollectionPath = "/products"
 
     private lateinit var navigationView: NavigationView
     private lateinit var dpSize: DpSize
 
-    lateinit var recipeViewModel: RecipeViewModel
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     //Jeśli użytkownik się wylogował, pokazujemy ekran logowania
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
@@ -94,9 +94,6 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
-        recipeViewModel =
-            ViewModelProviders.of(this@RecipeActivity).get(RecipeViewModel::class.java)
-
         val dishImageView = findViewById<ImageView>(R.id.dish_image)
         val dishNameTextView = findViewById<TextView>(R.id.dish_name)
         val timeToPrepareIcon = findViewById<ImageView>(R.id.time_ic)
@@ -106,15 +103,12 @@ class RecipeActivity : AppCompatActivity() {
         val mealTypeIcon = findViewById<ImageView>(R.id.meal_type_ic)
         val mealTypeTextView = findViewById<TextView>(R.id.meal_type_text)
         val recipeDescriptionTextView = findViewById<TextView>(R.id.recipe_description)
-
         val container = findViewById<LinearLayout>(R.id.ingredients_container)
 
         val activity = this@RecipeActivity
 
         val selectedRecipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
         val recipeReference = db.collection(recipeCollectionPath).document(selectedRecipeId!!)
-        val productReference = db.collection(productCollectionPath).document()
-
 
         recipeReference.get()
             .addOnSuccessListener { document ->
@@ -134,75 +128,81 @@ class RecipeActivity : AppCompatActivity() {
                     val name = "Pomidorek"
                     var i = 0
 
-                    while (i < 5) {
+                    val ingredient = document["ingredients"] as ArrayList<String>
 
+                    for (i in 0 until ingredient.size) {
 
-                        val ingredientsContainer = LinearLayout(activity).apply {
-                            orientation = LinearLayout.VERTICAL
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                        }
+                        val productReference = db.collection(productCollectionPath).document(ingredient[i])
 
-                        val ingredientNameTextView = TextView(activity).apply {
+                        productReference.get()
+                            .addOnSuccessListener { document2 ->
+                                if (document2 != null) {
 
-                            val ingredient = document["ingredients"] as ArrayList<String>
-                            text = ingredient[1]
+                                    val ingredientsContainer = LinearLayout(activity).apply {
+                                        orientation = LinearLayout.VERTICAL
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                    }
 
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                        }
+                                    val ingredientNameTextView = TextView(activity).apply {
+                                        //text = ingredient[i]
+                                        //text = ingredient.size.toString()
+                                        text = document2.getString("name")
 
-                        val quantityAndUnitContainer = LinearLayout(activity).apply {
-                            orientation = LinearLayout.HORIZONTAL
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                        }
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                    }
 
-                        val ingredientQuantityTextView = TextView(activity).apply {
-                            text = "5"
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
-                            )
-                        }
+                                    val quantityAndUnitContainer = LinearLayout(activity).apply {
+                                        orientation = LinearLayout.HORIZONTAL
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                    }
 
-                        quantityAndUnitContainer.addView(ingredientQuantityTextView)
+                                    val ingredientQuantityTextView = TextView(activity).apply {
+                                        text = document2.getString("quantity")
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                    }
 
-                        val ingredientUnitTextView = TextView(activity).apply {
-                            text = " szt."
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT
-                            )
-                        }
+                                    quantityAndUnitContainer.addView(ingredientQuantityTextView)
 
-                        quantityAndUnitContainer.addView(ingredientUnitTextView)
+                                    val ingredientUnitTextView = TextView(activity).apply {
+                                        text = document2.getString("unit")
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.MATCH_PARENT
+                                        )
+                                        (layoutParams as LinearLayout.LayoutParams).setMargins(8, 0 , 0, 0)
+                                    }
 
-                        val separator = View(activity).apply {
-                            setBackgroundColor(Color.parseColor("#3A0A0A0A"))
-                            layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                dpSize.dpToPx(1)
-                            )
-                        }
+                                    quantityAndUnitContainer.addView(ingredientUnitTextView)
 
-                        ingredientsContainer.addView(ingredientNameTextView)
-                        ingredientsContainer.addView(quantityAndUnitContainer)
+                                    val separator = View(activity).apply {
+                                        setBackgroundColor(Color.parseColor("#3A0A0A0A"))
+                                        layoutParams = LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            dpSize.dpToPx(1)
+                                        )
+                                    }
 
-                        ingredientsContainer.addView(separator)
+                                    ingredientsContainer.addView(ingredientNameTextView)
+                                    ingredientsContainer.addView(quantityAndUnitContainer)
 
-                        container.addView(ingredientsContainer)
+                                    ingredientsContainer.addView(separator)
 
-                        i++
-
+                                    container.addView(ingredientsContainer)
+                                }
+                            }
                     }
-
                 } else {
                     Log.d("TAG", "No such document")
                 }
