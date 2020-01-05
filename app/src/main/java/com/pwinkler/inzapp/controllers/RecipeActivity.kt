@@ -125,9 +125,6 @@ class RecipeActivity : AppCompatActivity() {
                     mealTypeTextView?.text = document.getString("meal_type")
                     recipeDescriptionTextView?.text = document.getString("description")
 
-                    val name = "Pomidorek"
-                    var i = 0
-
                     val ingredient = document["ingredients"] as ArrayList<String>
 
                     for (i in 0 until ingredient.size) {
@@ -147,8 +144,6 @@ class RecipeActivity : AppCompatActivity() {
                                     }
 
                                     val ingredientNameTextView = TextView(activity).apply {
-                                        //text = ingredient[i]
-                                        //text = ingredient.size.toString()
                                         text = document2.getString("name")
 
                                         layoutParams = LinearLayout.LayoutParams(
@@ -200,7 +195,12 @@ class RecipeActivity : AppCompatActivity() {
                                     ingredientsContainer.addView(separator)
 
                                     container.addView(ingredientsContainer)
+                                } else {
+                                    Log.d("TAG", "No such document")
                                 }
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.d("TAG", "Get failed with product database", exception)
                             }
                     }
                 } else {
@@ -208,7 +208,7 @@ class RecipeActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("TAG", "Get failed with database", exception)
+                Log.d("TAG", "Get failed with recipe database", exception)
             }
         }
 }
