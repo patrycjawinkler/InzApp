@@ -4,25 +4,21 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginStart
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
-import com.pwinkler.inzapp.models.Recipe
-import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import com.squareup.picasso.Picasso
 import com.pwinkler.inzapp.controllers.RecipesListActivity.Companion.EXTRA_RECIPE_ID
-import com.pwinkler.inzapp.controllers.RecipesListActivity.Companion.EXTRA_RECIPE_NAME
 import com.pwinkler.inzapp.helpers.DpSize
 import java.util.*
 
@@ -31,6 +27,7 @@ class RecipeActivity : AppCompatActivity() {
     private val recipeCollectionPath = "/recipes"
     private val productCollectionPath = "/products"
 
+    private lateinit var navigationDrawer: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var dpSize: DpSize
 
@@ -56,11 +53,26 @@ class RecipeActivity : AppCompatActivity() {
         fbAuth.removeAuthStateListener(authStateListener)
     }
 
+    override fun onBackPressed() {
+        if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+            navigationDrawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe)
 
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+
         dpSize = DpSize(this@RecipeActivity)
+
+        navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
         navigationView.apply {
@@ -95,6 +107,8 @@ class RecipeActivity : AppCompatActivity() {
         }
 
         val dishImageView = findViewById<ImageView>(R.id.dish_image)
+        val favoriteImageView = findViewById<ImageView>(R.id.favorite_ic)
+        val chosenImageView = findViewById<ImageView>(R.id.chosen_ic)
         val dishNameTextView = findViewById<TextView>(R.id.dish_name)
         val timeToPrepareIcon = findViewById<ImageView>(R.id.time_ic)
         val timeToPrepareTextView = findViewById<TextView>(R.id.time_to_prepare)
@@ -116,6 +130,8 @@ class RecipeActivity : AppCompatActivity() {
                     if (document.getString("image_id")!!.isNotBlank()) {
                         Picasso.get().load(document.getString("image_id")).into(dishImageView)
                     }
+                    favoriteImageView?.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                    chosenImageView?.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
                     dishNameTextView?.text = document.getString("name")
                     timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
                     timeToPrepareTextView?.text = document.getString("time_to_prepare")
@@ -145,6 +161,7 @@ class RecipeActivity : AppCompatActivity() {
 
                                     val ingredientNameTextView = TextView(activity).apply {
                                         text = document2.getString("name")
+                                        textSize = 16F
 
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -162,6 +179,7 @@ class RecipeActivity : AppCompatActivity() {
 
                                     val ingredientQuantityTextView = TextView(activity).apply {
                                         text = document2.getString("quantity")
+                                        textSize = 14F
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.WRAP_CONTENT,
                                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -172,6 +190,7 @@ class RecipeActivity : AppCompatActivity() {
 
                                     val ingredientUnitTextView = TextView(activity).apply {
                                         text = document2.getString("unit")
+                                        textSize = 14F
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.WRAP_CONTENT,
                                             LinearLayout.LayoutParams.MATCH_PARENT
@@ -211,4 +230,20 @@ class RecipeActivity : AppCompatActivity() {
                 Log.d("TAG", "Get failed with recipe database", exception)
             }
         }
+
+    /**
+     * Dodawanie ikonek do bottom app bar
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.recipe_toolbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

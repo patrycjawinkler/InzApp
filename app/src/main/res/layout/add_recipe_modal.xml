@@ -85,7 +85,8 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dish_name_text"/>
+                app:layout_constraintTop_toBottomOf="@+id/dish_name_text"
+                android:autofillHints="" />
 
             <TextView
                 android:id="@+id/meal_type_text"

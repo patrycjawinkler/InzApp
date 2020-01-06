@@ -30,12 +30,18 @@
     <string name="add">Dodaj</string>
     <string name="quantity">Ilość</string>
     <string name="favorite">Ulubione</string>
-    <string name="chosen">Wybrane</string>
+    <string name="not_favorite">Nieulubione</string>
+    <string name="chosen">Wybrany</string>
+    <string name="unchosen">Niewybrany</string>
     <string name="username">Nazwa użytkownika</string>
     <string name="dish_image">Zdjęcie dania</string>
     <string name="dish_type_ic">Ikona typu dania</string>
     <string name="meal_type_ic">Ikona typu posiłku</string>
     <string name="time_to_prepare_ic">Ikona czasu przygotowania</string>
+    <string name="send_a_recipe">Wyślij przepis</string>
+    <string name="options">Opcje</string>
+    <string name="add_to_shopping_list">Dodaj do listy zakupów</string>
+    <string name="search">Szukaj</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

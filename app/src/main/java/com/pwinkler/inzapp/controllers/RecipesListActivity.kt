@@ -5,10 +5,16 @@ import android.app.NotificationManager
 import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +36,7 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
     lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
     lateinit var recipeViewModel: RecipeViewModel
     private lateinit var navigationView: NavigationView
+    private lateinit var navigationDrawer: DrawerLayout
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -50,12 +57,23 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         fbAuth.removeAuthStateListener(authStateListener)
     }
 
-    //Funkcja onBackPressed niepotrzebna, ponieważ będziemy się cofać do MainActivity
+    override fun onBackPressed() {
+        if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
+            navigationDrawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.my_recipes_list)
+
         setSupportActionBar(findViewById(R.id.my_recipes_toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+
+        navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
         navigationView.apply{
@@ -152,6 +170,59 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         mNotificationManager.notify(0, mBuilder.build())
     }
 
+
+    /**
+     * Funkcja, która tworzy ikonki na toolbarze
+     * i podpina narzędzie szukania
+     */
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.recipe_list_toolbar_menu, menu)
+        val mSearch = menu.findItem(R.id.app_bar_search)
+        val mSearchView = mSearch.actionView as SearchView
+        mSearchView.queryHint = "Szukaj..."
+        mSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterRecipes(newText)
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    /**
+     * Funkcja, która iteruje po przepisach
+     * i zwraca tylko te zawierające query
+     */
+    private fun filterRecipes(query: String?){
+        val filteredRecipes = recipeViewModel.currentRecipeList.value
+            ?.filter {
+                doesRecipeContainSearchQuery(it, query)
+            }
+        recipeRecycleAdapter.setRecipeList(filteredRecipes ?: listOf())
+    }
+
+    /**
+     * Sprawdza czy w nazwie przepisu występuje query
+     *
+     */
+    private fun doesRecipeContainSearchQuery(recipe: Recipe, query: String?): Boolean {
+        return (recipe.name.contains(query ?: "", true))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * Funkcja, która odsyła do wybranego przepisu
+     */
     private fun goToRecipe(recipeId: String, recipeName: String) {
         val intent = Intent(this, RecipeActivity::class.java)
             .apply {
@@ -162,8 +233,8 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
     }
 
     /**
-     * Funkcja, która pokazuje dialog tworzenia projektu,
-     * po naciśnięciu FABa
+     * Funkcja, która po naciśnieciu FABa
+     * pokazuje dialog tworzenia projektu
      */
     private fun showAddRecipeDialog() {
         val dialog = AddRecipeDialogFragment()
