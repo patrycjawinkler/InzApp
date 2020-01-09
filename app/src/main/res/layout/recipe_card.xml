@@ -21,17 +21,37 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
-
         <ImageView
             android:id="@+id/dish_image"
             android:layout_width="wrap_content"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
+            android:contentDescription="@string/dish_image"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@drawable/dish_example" />
+
+        <ImageView
+            android:id="@+id/favorite_ic"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/chosen"
+            card_view:layout_constraintEnd_toStartOf="@+id/chosen_ic"
+            card_view:layout_constraintTop_toBottomOf="@+id/meal_type_text"
+            tools:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+
+        <ImageView
+            android:id="@+id/chosen_ic"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/favorite"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/meal_type_text"
+            tools:srcCompat="@drawable/ic_bookmark_border_black_24dp" />
 
         <TextView
             android:id="@+id/dish_name"
@@ -56,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:contentDescription="@string/time_to_prepare_ic"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/dish_type_text"
             tools:srcCompat="@drawable/ic_time_24dp" />
@@ -79,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:contentDescription="@string/dish_type_ic"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/dish_name"
             tools:srcCompat="@drawable/ic_dish_24dp" />
@@ -102,6 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:contentDescription="@string/meal_type_ic"
             card_view:layout_constraintStart_toEndOf="@+id/dish_type_text"
             card_view:layout_constraintTop_toBottomOf="@+id/dish_name"
             tools:srcCompat="@drawable/ic_meal_type_24dp" />
@@ -118,16 +141,6 @@
             card_view:layout_constraintStart_toEndOf="@+id/meal_type_ic"
             card_view:layout_constraintTop_toBottomOf="@+id/dish_name"
             tools:text="Mięsne" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:srcCompat="@drawable/ic_edit_24dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

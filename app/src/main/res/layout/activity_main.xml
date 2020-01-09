@@ -66,29 +66,37 @@
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_margin="16dp">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/ic_background"
+                        android:id="@+id/my_recipes_ic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="24dp"
+                        android:contentDescription="@string/my_recipes"
                         android:padding="10dp"
-                        android:src="@drawable/ic_view_list_50dp"/>
+                        android:src="@drawable/recipes"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/my_recipes_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
+                        android:paddingTop="10dp"
                         android:text="@string/my_recipes"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/my_recipes_ic" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -104,29 +112,38 @@
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_margin="16dp">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/ic_background"
+                        android:id="@+id/shopping_list_ic"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:contentDescription="@string/shopping_list"
                         android:padding="10dp"
-                        android:src="@drawable/ic_create_50dp"/>
+                        android:src="@drawable/list"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/shopping_list_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
+                        android:paddingTop="10dp"
                         android:text="@string/shopping_list"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/shopping_list_ic" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -142,29 +159,37 @@
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_margin="16dp">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/ic_background"
+                        android:id="@+id/random_ic"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="24dp"
+                        android:contentDescription="@string/random_recipe"
                         android:padding="10dp"
-                        android:src="@drawable/ic_shuffle_50dp"/>
+                        android:src="@drawable/random"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/random_recipe_text_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:layout_height="34dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
+                        android:paddingTop="10dp"
                         android:text="@string/random_recipe"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/random_ic" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -180,28 +205,37 @@
                 app:layout_columnWeight="1"
                 app:layout_rowWeight="1">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_margin="16dp">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/ic_background"
+                        android:id="@+id/give_recipe_ic"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="24dp"
+                        android:contentDescription="@string/give_recipe"
                         android:padding="10dp"
-                        android:src="@drawable/ic_give_recipe_50dp"/>
+                        android:src="@drawable/find"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/give_recipe_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
+                        android:paddingTop="10dp"
                         android:text="@string/give_recipe"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/give_recipe_ic" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>
 
