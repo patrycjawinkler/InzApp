@@ -9,5 +9,7 @@ data class Recipe(
     val meal_type: String,
     val dish_type: String,
     val ingredients: ArrayList<String>,
+    val favorite: Boolean = false,
+    val chosen: Boolean = false,
     val users: List<String>?
 )

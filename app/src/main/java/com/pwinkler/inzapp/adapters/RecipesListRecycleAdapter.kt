@@ -58,12 +58,14 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
         val dishTypeTextView = itemView.findViewById<TextView>(R.id.dish_type_text)
         val mealTypeIcon = itemView.findViewById<ImageView>(R.id.meal_type_ic)
         val mealTypeTextView = itemView.findViewById<TextView>(R.id.meal_type_text)
+        val favoriteIcon = itemView.findViewById<ImageView>(R.id.favorite_ic)
+        val chosenIcon = itemView.findViewById<ImageView>(R.id.chosen_ic)
 
         fun bind(recipe: Recipe) {
 
             //Ustawianie komponentów wyglądu i nadawanie im funkcjonalności
 
-            if(recipe.image_id.isNotBlank()){
+            if (recipe.image_id.isNotBlank()){
                 Picasso.get().load(recipe.image_id).into(dishImageView)
             }
             dishNameTextView?.text = recipe.name
@@ -73,7 +75,16 @@ class RecipesListRecycleAdapter(context: Context, val goToRecipe: (String, Strin
             dishTypeTextView?.text = recipe.dish_type
             mealTypeIcon?.setImageResource(R.drawable.ic_meal_type_24dp)
             mealTypeTextView?.text = recipe.meal_type
-
+            if (recipe.favorite) {
+                favoriteIcon?.setImageResource(R.drawable.ic_favorite_24dp)
+            } else {
+                favoriteIcon?.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+            }
+            if (recipe.chosen) {
+                chosenIcon?.setImageResource(R.drawable.ic_bookmark_black_24dp)
+            } else {
+                chosenIcon?.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+            }
 
             recipeListItemContainer.setOnClickListener {
                 goToRecipe(recipe.id, recipe.name)

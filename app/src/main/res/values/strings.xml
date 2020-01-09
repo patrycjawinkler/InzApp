@@ -31,7 +31,7 @@
     <string name="quantity">Ilość</string>
     <string name="favorite">Ulubione</string>
     <string name="not_favorite">Nieulubione</string>
-    <string name="chosen">Wybrany</string>
+    <string name="chosen">Wybrane</string>
     <string name="unchosen">Niewybrany</string>
     <string name="username">Nazwa użytkownika</string>
     <string name="dish_image">Zdjęcie dania</string>

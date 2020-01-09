@@ -44,12 +44,14 @@ class AddRecipeDialogFragment : DialogFragment() {
     private var ingredients = 1
 
     lateinit var storage : FirebaseStorage
-    lateinit var storageReference : StorageReference
+    private lateinit var storageReference : StorageReference
 
-    val db = FirebaseFirestore.getInstance()
-    val collectionPath = "/products"
+    private val db = FirebaseFirestore.getInstance()
+    private val collectionPath = "/products"
 
-    val ingredientList = arrayListOf<String>()
+    private val ingredientList = arrayListOf<String>()
+    private val favorite = false
+    private val chosen = false
 
     /**
      * Interfejs, który RecipesListActivity musi zaimplementować,
@@ -64,7 +66,9 @@ class AddRecipeDialogFragment : DialogFragment() {
             time_to_prepare: String,
             meal_type: String,
             dish_type: String,
-            ingredients: ArrayList<String>
+            ingredients: ArrayList<String>,
+            favorite: Boolean,
+            chosen: Boolean
         )
     }
 
@@ -261,7 +265,9 @@ class AddRecipeDialogFragment : DialogFragment() {
                                             timeToPrepareSpinner.selectedItem.toString(),
                                             mealTypeSpinner.selectedItem.toString(),
                                             dishTypeSpinner.selectedItem.toString(),
-                                            ingredientList
+                                            ingredientList,
+                                            favorite,
+                                            chosen
                                         )
                                         progressBar.visibility = View.GONE
                                         dialog.dismiss()

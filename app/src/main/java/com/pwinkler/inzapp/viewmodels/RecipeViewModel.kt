@@ -23,10 +23,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     val currentRecipeList = MutableLiveData<List<Recipe>>()
     val currentInviteList = MutableLiveData<ArrayList<String>>()
 
+    private val recipeCollection = db.collection(collectionPath)
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie przepisy użytkownika
+     */
     fun getAllUserRecipes() {
-
-        val recipeCollection = db.collection(collectionPath)
-
         recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
             .addOnSuccessListener { documents ->
                 currentRecipeList.postValue(
@@ -40,6 +42,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                         val mealType = data["meal_type"] ?: throw NoSuchFieldException()
                         val dishType = data["dish_type"] ?: throw NoSuchFieldException()
                         val ingredients = data["ingredients"] ?: arrayListOf("")
+                        val favorite = data["favorite"] ?: ""
+                        val chosen = data["chosen"] ?: ""
                         val users = data["users"] ?: throw NoSuchFieldException()
 
                         Recipe(
@@ -51,13 +55,99 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                             mealType as String,
                             dishType as String,
                             ingredients as ArrayList<String>,
+                            favorite as Boolean,
+                            chosen as Boolean,
                             users as List<String>
                         )
                     }
                 )
             }
             .addOnFailureListener {
-                Toast.makeText(getApplication(), "Pobieranie z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+                Toast.makeText(getApplication(), "Pobieranie wszystkich przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
+     */
+    fun getAllFavoriteUserRecipes() {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("favorite", true).get()
+            .addOnSuccessListener { documents ->
+                currentRecipeList.postValue(
+                    documents.map { recipe ->
+                        val data = recipe.data
+                        val id = recipe.id
+                        val name = data["name"] ?: throw NoSuchFieldException()
+                        val description = data["description"] ?: throw NoSuchFieldException()
+                        val image = data["image_id"] ?: ""
+                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
+                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
+                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
+                        val ingredients = data["ingredients"] ?: arrayListOf("")
+                        val favorite = data["favorite"] ?: ""
+                        val chosen = data["chosen"] ?: ""
+                        val users = data["users"] ?: throw NoSuchFieldException()
+
+                        Recipe(
+                            id,
+                            name as String,
+                            description as String,
+                            image as String,
+                            timeToPrepare as String,
+                            mealType as String,
+                            dishType as String,
+                            ingredients as ArrayList<String>,
+                            favorite as Boolean,
+                            chosen as Boolean,
+                            users as List<String>
+                        )
+                    }
+                )
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Pobieranie ulubionych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
+     */
+    fun getAllChosenUserRecipes() {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("chosen", true).get()
+            .addOnSuccessListener { documents ->
+                currentRecipeList.postValue(
+                    documents.map { recipe ->
+                        val data = recipe.data
+                        val id = recipe.id
+                        val name = data["name"] ?: throw NoSuchFieldException()
+                        val description = data["description"] ?: throw NoSuchFieldException()
+                        val image = data["image_id"] ?: ""
+                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
+                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
+                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
+                        val ingredients = data["ingredients"] ?: arrayListOf("")
+                        val favorite = data["favorite"] ?: ""
+                        val chosen = data["chosen"] ?: ""
+                        val users = data["users"] ?: throw NoSuchFieldException()
+
+                        Recipe(
+                            id,
+                            name as String,
+                            description as String,
+                            image as String,
+                            timeToPrepare as String,
+                            mealType as String,
+                            dishType as String,
+                            ingredients as ArrayList<String>,
+                            favorite as Boolean,
+                            chosen as Boolean,
+                            users as List<String>
+                        )
+                    }
+                )
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Pobieranie wybranych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
             }
     }
 
@@ -95,13 +185,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
      * Funkcja, która dodaje przespis do bazy
      */
     fun addRecipe(name: String, description: String, image_id: String, time_to_prepare: String,
-                  meal_type: String, dish_type: String, ingredients: ArrayList<String>) {
+                  meal_type: String, dish_type: String, ingredients: ArrayList<String>, favorite: Boolean = false, chosen: Boolean = false) {
 
         //Utwórz nowy dokument i pobierz referencje (id jest tworzone automatycznie)
         val recipeReference = db.collection(collectionPath).document()
 
         val updatedRecipe = Recipe(recipeReference.id, name, description, image_id, time_to_prepare,
-            meal_type, dish_type, ingredients, null)
+            meal_type, dish_type, ingredients, favorite, chosen, null)
 
         recipeReference.set(
             HashMap<String, Any>().apply {
@@ -113,6 +203,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
                 this["meal_type"] = updatedRecipe.meal_type
                 this["dish_type"] = updatedRecipe.dish_type
                 this["ingredients"] = updatedRecipe.ingredients
+                this["favorite"] = updatedRecipe.favorite
+                this["chosen"] = updatedRecipe.chosen
                 this["users"] = listOf(fbAuth.currentUser!!.uid)
             },
             SetOptions.merge()

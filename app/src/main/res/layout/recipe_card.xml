@@ -23,10 +23,10 @@
 
         <ImageView
             android:id="@+id/dish_image"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="160dp"
-            android:scaleType="centerCrop"
             android:contentDescription="@string/dish_image"
+            android:scaleType="centerCrop"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toStartOf="parent"

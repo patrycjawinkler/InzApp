@@ -118,6 +118,8 @@ class RecipeActivity : AppCompatActivity() {
         val mealTypeTextView = findViewById<TextView>(R.id.meal_type_text)
         val recipeDescriptionTextView = findViewById<TextView>(R.id.recipe_description)
         val container = findViewById<LinearLayout>(R.id.ingredients_container)
+        val favoriteIcon = findViewById<ImageView>(R.id.favorite_ic)
+        val chosenIcon = findViewById<ImageView>(R.id.chosen_ic)
 
         val activity = this@RecipeActivity
 
@@ -140,6 +142,38 @@ class RecipeActivity : AppCompatActivity() {
                     mealTypeIcon?.setImageResource(R.drawable.ic_meal_type_24dp)
                     mealTypeTextView?.text = document.getString("meal_type")
                     recipeDescriptionTextView?.text = document.getString("description")
+
+                    favoriteIcon.setOnClickListener {
+                        if (!document.getBoolean("favorite")!!) {
+                            recipeReference.update("favorite", true)
+                            favoriteIcon.setImageResource(R.drawable.ic_favorite_24dp)
+                        } else {
+                            recipeReference.update("favorite", false)
+                            favoriteIcon.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                        }
+                    }
+
+                    chosenIcon.setOnClickListener {
+                        if (!document.getBoolean("chosen")!!) {
+                            recipeReference.update("chosen", true)
+                            chosenIcon.setImageResource(R.drawable.ic_bookmark_black_24dp)
+                        } else {
+                            recipeReference.update("chosen", false)
+                            chosenIcon.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                        }
+                    }
+
+                    if (!document.getBoolean("favorite")!!){
+                        favoriteIcon.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                    } else {
+                        favoriteIcon.setImageResource(R.drawable.ic_favorite_24dp)
+                    }
+
+                    if (!document.getBoolean("chosen")!!){
+                        chosenIcon.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                    } else {
+                        chosenIcon.setImageResource(R.drawable.ic_bookmark_black_24dp)
+                    }
 
                     val ingredient = document["ingredients"] as ArrayList<String>
 

@@ -248,9 +248,11 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         time_to_prepare: String,
         meal_type: String,
         dish_type: String,
-        ingredients: ArrayList<String>) {
+        ingredients: ArrayList<String>,
+        favorite: Boolean,
+        chosen: Boolean) {
 
-        recipeViewModel.addRecipe(name, description, image_id, time_to_prepare, meal_type, dish_type, ingredients)
+        recipeViewModel.addRecipe(name, description, image_id, time_to_prepare, meal_type, dish_type, ingredients, favorite, chosen)
     }
 
     /**
