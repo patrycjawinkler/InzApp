@@ -77,6 +77,7 @@ class RecipeActivity : AppCompatActivity() {
         navigationView = findViewById(R.id.navigation_view)
         navigationView.apply {
             setHeader(fbAuth.currentUser?.email)
+            setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
             }

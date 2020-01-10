@@ -25,8 +25,8 @@ import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 
 class FavoriteListActivity : AppCompatActivity() {
 
-    lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
-    lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
+    private lateinit var recipeViewModel: RecipeViewModel
     private lateinit var navigationView: NavigationView
     private lateinit var navigationDrawer: DrawerLayout
 
@@ -64,12 +64,14 @@ class FavoriteListActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_favorite_recipes_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+        supportActionBar?.title = "Ulubione"
 
         navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
         navigationView.apply{
             setHeader(fbAuth.currentUser?.email)
+            setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
             }

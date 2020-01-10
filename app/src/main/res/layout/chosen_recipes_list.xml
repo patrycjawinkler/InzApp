@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
+            android:theme="@style/ToolbarSearchViewAppearance"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.545"

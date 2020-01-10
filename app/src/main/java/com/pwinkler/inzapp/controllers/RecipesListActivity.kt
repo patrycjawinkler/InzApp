@@ -28,6 +28,7 @@ import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.fragments.AddRecipeDialogFragment
 import com.pwinkler.inzapp.models.Recipe
+import com.pwinkler.inzapp.models.User
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import kotlin.system.exitProcess
 
@@ -38,7 +39,10 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
     private lateinit var navigationView: NavigationView
     private lateinit var navigationDrawer: DrawerLayout
 
+    private val userCollectionPath = "/users"
+
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         if(firebaseAuth.currentUser == null) {
@@ -72,12 +76,14 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         setSupportActionBar(findViewById(R.id.my_recipes_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+        supportActionBar?.title = "Moje przepisy"
 
         navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
-        navigationView.apply{
+        navigationView.apply {
             setHeader(fbAuth.currentUser?.email)
+            setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
             }

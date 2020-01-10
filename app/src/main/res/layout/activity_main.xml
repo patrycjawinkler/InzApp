@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/login_background_2_png"
+        android:background="@drawable/main_activity_bg"
         tools:context=".controllers.MainActivity">
 
         <RelativeLayout
@@ -31,12 +31,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="32dp"
                     android:layout_marginTop="64dp"
                     android:gravity="center"
-                    android:text="Cześć, Patrycja"
+                    android:text="Witaj w aplikacji InzApp"
                     android:textColor="@color/white"
                     android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -249,6 +249,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="false"
+
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/navigation_header"
         app:itemBackground="?attr/selectableItemBackground"/>

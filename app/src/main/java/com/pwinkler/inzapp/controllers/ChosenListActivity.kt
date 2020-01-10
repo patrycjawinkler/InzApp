@@ -64,12 +64,14 @@ class ChosenListActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_chosen_recipes_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
+        supportActionBar?.title = "Wybrane"
 
         navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
         navigationView.apply{
             setHeader(fbAuth.currentUser?.email)
+            setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
             }

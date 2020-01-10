@@ -1,6 +1,7 @@
 package com.pwinkler.inzapp
 
 import com.google.android.material.navigation.NavigationView
+import com.pwinkler.inzapp.models.User
 import kotlinx.android.synthetic.main.navigation_header.view.*
 
 /**
@@ -8,9 +9,14 @@ import kotlinx.android.synthetic.main.navigation_header.view.*
  * ZMIENIC ADRES E-MAIL NA USERNAME
  */
 
-fun NavigationView.setHeader(name: String? = "") {
+fun NavigationView.setHeader(email: String? = "") {
     val headerView = this.getHeaderView(0)
-    headerView.email_address_text.text = name
+    headerView.email_address_text.text = email
+}
+
+fun NavigationView.setHeaderUsername(username: String? = "") {
+    val headerView = this.getHeaderView(0)
+    headerView.username_text.text = username
 }
 
 /**

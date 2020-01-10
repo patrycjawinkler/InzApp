@@ -21,10 +21,11 @@
         <item name="titleTextColor">@color/white</item>
     </style>
 
-    <style name="ToolbarSearchViewAppearance" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="ToolbarSearchViewAppearance" parent="AppTheme">
         <item name="android:editTextColor">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="FullScreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
