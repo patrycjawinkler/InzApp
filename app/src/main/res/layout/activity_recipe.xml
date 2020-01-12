@@ -204,9 +204,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="false"
+        android:fitsSystemWindows="true"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:itemBackground="@drawable/nav_bg_colors"
         app:menu="@menu/drawer_menu"
-        app:headerLayout="@layout/navigation_header"
-        app:itemBackground="?attr/selectableItemBackground"/>
+        app:headerLayout="@layout/navigation_header" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

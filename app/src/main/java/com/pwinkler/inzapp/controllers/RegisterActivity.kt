@@ -58,10 +58,11 @@ class RegisterActivity: AppCompatActivity() {
                                 val user = HashMap<String, Any>()
                                 user["uid"] = fbAuth.currentUser?.uid ?: ""
                                 user["email"] = fbAuth.currentUser?.email ?: ""
-                                user["name"] = fbAuth.currentUser?.displayName ?: ""
+                                user["name"] = fbAuth.currentUser?.displayName ?: name
+                                user["invites"] = arrayListOf("")
 
                                 fbDatabase.collection("users")
-                                    .document()
+                                    .document(uid)
                                     .set(user)
                                     .addOnSuccessListener {
                                         startActivity(Intent(this, MainActivity::class.java))

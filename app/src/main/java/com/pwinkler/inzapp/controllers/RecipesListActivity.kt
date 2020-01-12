@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -81,14 +82,19 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
+        navigationView.setCheckedItem(R.id.nav_my_recipes)
         navigationView.apply {
             setHeader(fbAuth.currentUser?.email)
             setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
             }
+            setMainActivityAction {
+                val intent = Intent(this@RecipesListActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
             setRecipeListAction {
-                val intent = Intent(this@RecipesListActivity, RecipesListActivity::class.java)
+                val intent = Intent(this@RecipesListActivity, ShoppingListActivity::class.java)
                 startActivity(intent)
             }
             setShoppingListAction {
@@ -128,15 +134,14 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
 
         recipeViewModel.currentRecipeList.observe(this@RecipesListActivity, Observer {
             recipeRecycleAdapter.setRecipeList(it)
-            showInviteNotification()
+            showNewRecipeNotification()
         })
 
-        /**
         recipeViewModel.getInvites()
         recipeViewModel.currentInviteList.observe(this@RecipesListActivity, Observer {
-            showInviteNotification()
+            showNewRecipeNotification()
         })
-        */
+
 
         val recipeFAB = findViewById<FloatingActionButton>(R.id.add_recipes_fab)
         recipeFAB.setOnClickListener{
@@ -144,11 +149,11 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         }
     }
 
-    private fun showInviteNotification() {
+    private fun showNewRecipeNotification() {
         val recipes = recipeViewModel.currentRecipeList.value ?: return
         val invites = recipeViewModel.currentInviteList.value ?: return
         invites
-            .filter {it != " "}
+            .filter {it != ""}
             .forEach{
                 val recipe = getRecipeFromId(recipes, it)
                 showNotification("Otrzymałeś nowy przepis: ", recipe.name)
@@ -169,7 +174,8 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
             mNotificationManager.createNotificationChannel(channel)
         }
         val mBuilder = NotificationCompat.Builder(applicationContext, "YOUR_CHANNEL_ID")
-            .setSmallIcon(R.mipmap.ic_launcher) //ustaw ikonkę aplikacji
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)) //ustaw dużą ikonkę aplikacji
+            .setSmallIcon(R.mipmap.ic_launcher) //ustaw małą ikonkę aplikacji
             .setContentTitle(title) //ustaw tytuł powiadomienia
             .setContentText(msg) //ustaw wiadomość - nazwę przepisu
             .setAutoCancel(true) //usuń powiadomienie po kliknięciu

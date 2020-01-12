@@ -6,40 +6,58 @@
         android:id="@+id/nav_group">
 
         <item
-            android:id="@+id/nav_my_recipes"
+            android:id="@+id/nav_main"
             android:icon="@drawable/ic_view_list_50dp"
-            android:title="@string/my_recipes"/>
+            android:title="@string/main"
+            android:checkable="true" />
+
+        <item
+            android:id="@+id/nav_my_recipes"
+            android:icon="@drawable/ic_recipes_24dp"
+            android:title="@string/my_recipes"
+            android:checkable="true" />
 
         <item
             android:id="@+id/nav_shopping_list"
             android:icon="@drawable/ic_create_50dp"
-            android:title="@string/shopping_list"/>
+            android:title="@string/shopping_list"
+            android:checkable="true" />
 
         <item
             android:id="@+id/nav_random_recipe"
             android:icon="@drawable/ic_shuffle_50dp"
-            android:title="@string/random_recipe"/>
+            android:title="@string/random_recipe"
+            android:checkable="true" />
 
         <item
             android:id="@+id/nav_give_recipe"
             android:icon="@drawable/ic_give_recipe_50dp"
-            android:title="@string/give_recipe"/>
+            android:title="@string/give_recipe"
+            android:checkable="true" />
 
         <item
             android:id="@+id/nav_favorite_recipes"
             android:icon="@drawable/ic_favorite_24dp"
-            android:title="@string/favorite"/>
+            android:title="@string/favorite"
+            android:checkable="true" />
 
         <item
             android:id="@+id/nav_chosen_recipes"
             android:icon="@drawable/ic_today_24dp"
-            android:title="@string/chosen"/>
-
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout_24dp"
-            android:title="@string/logout"/>
+            android:title="@string/chosen"
+            android:checkable="true" />
 
     </group>
+
+        <group
+            android:id="@+id/logout_section"
+            android:checkableBehavior="none">
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout_24dp"
+                android:title="@string/logout"/>
+
+        </group>
 
 </menu>

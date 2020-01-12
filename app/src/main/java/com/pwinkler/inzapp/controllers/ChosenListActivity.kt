@@ -69,11 +69,16 @@ class ChosenListActivity : AppCompatActivity() {
         navigationDrawer = findViewById(R.id.drawer_layout)
 
         navigationView = findViewById(R.id.navigation_view)
+        navigationView.setCheckedItem(R.id.nav_chosen_recipes)
         navigationView.apply{
             setHeader(fbAuth.currentUser?.email)
             setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
+            }
+            setMainActivityAction {
+                val intent = Intent(this@ChosenListActivity, MainActivity::class.java)
+                startActivity(intent)
             }
             setRecipeListAction {
                 val intent = Intent(this@ChosenListActivity, RecipesListActivity::class.java)

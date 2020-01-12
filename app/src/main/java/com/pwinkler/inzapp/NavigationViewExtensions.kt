@@ -32,6 +32,14 @@ fun NavigationView.setLogoutAction(onClick: () -> Unit) {
     }
 }
 
+fun NavigationView.setMainActivityAction(onClick: () -> Unit) {
+    val navigationMainActivityButton = this.menu.findItem(R.id.nav_main)
+    navigationMainActivityButton.setOnMenuItemClickListener {
+        onClick()
+        true
+    }
+}
+
 fun NavigationView.setRecipeListAction(onClick: () -> Unit) {
     val navigationRecipeListButton = this.menu.findItem(R.id.nav_my_recipes)
     navigationRecipeListButton.setOnMenuItemClickListener {

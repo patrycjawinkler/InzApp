@@ -60,11 +60,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navigationView = findViewById(R.id.navigation_view)
+        navigationView.setCheckedItem(R.id.nav_main)
         navigationView.apply{
             setHeader(fbAuth.currentUser?.email)
             setHeaderUsername(fbAuth.currentUser?.displayName)
             setLogoutAction {
                 fbAuth.signOut()
+            }
+            setMainActivityAction {
+                val intent = Intent(this@MainActivity, MainActivity::class.java)
+                startActivity(intent)
             }
             setRecipeListAction {
                 val intent = Intent(this@MainActivity, RecipesListActivity::class.java)

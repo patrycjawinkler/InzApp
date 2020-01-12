@@ -13,24 +13,31 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.squareup.picasso.Picasso
 import com.pwinkler.inzapp.controllers.RecipesListActivity.Companion.EXTRA_RECIPE_ID
+import com.pwinkler.inzapp.fragments.SendRecipeDialogFragment
 import com.pwinkler.inzapp.helpers.DpSize
+import com.pwinkler.inzapp.models.Recipe
+import com.pwinkler.inzapp.models.User
+import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import java.util.*
 
-class RecipeActivity : AppCompatActivity() {
+class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListener {
 
     private val recipeCollectionPath = "/recipes"
     private val productCollectionPath = "/products"
 
     private lateinit var navigationDrawer: DrawerLayout
     private lateinit var navigationView: NavigationView
+    private lateinit var recipeViewModel: RecipeViewModel
     private lateinit var dpSize: DpSize
 
+    private var currentRecipe: Recipe? = null
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -107,6 +114,19 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
+        val selectedRecipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
+        Log.d("TAG", "selectedRecipeId: $selectedRecipeId")
+        val activity = this@RecipeActivity
+
+        recipeViewModel = ViewModelProviders.of(this@RecipeActivity).get(RecipeViewModel::class.java)
+        recipeViewModel.getAllUserRecipes()
+
+        recipeViewModel.currentRecipeList.observe(this@RecipeActivity, androidx.lifecycle.Observer {
+            currentRecipe = it.first { recipe -> recipe.id == selectedRecipeId }
+            Log.d("TAG", "currentRecipe: $currentRecipe")
+        })
+
+
         val dishImageView = findViewById<ImageView>(R.id.dish_image)
         val favoriteImageView = findViewById<ImageView>(R.id.favorite_ic)
         val chosenImageView = findViewById<ImageView>(R.id.chosen_ic)
@@ -122,9 +142,6 @@ class RecipeActivity : AppCompatActivity() {
         val favoriteIcon = findViewById<ImageView>(R.id.favorite_ic)
         val chosenIcon = findViewById<ImageView>(R.id.chosen_ic)
 
-        val activity = this@RecipeActivity
-
-        val selectedRecipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
         val recipeReference = db.collection(recipeCollectionPath).document(selectedRecipeId!!)
 
         recipeReference.get()
@@ -266,6 +283,15 @@ class RecipeActivity : AppCompatActivity() {
             }
         }
 
+    private fun showSendRecipeDialog() {
+        val dialog = SendRecipeDialogFragment()
+        dialog.show(supportFragmentManager, "SendRecipeDialogFragment")
+    }
+
+    override fun onSendRecipePositiveClick(user: User) {
+        recipeViewModel.inviteUser(user, currentRecipe)
+    }
+
     /**
      * Dodawanie ikonek do bottom app bar
      */
@@ -277,6 +303,7 @@ class RecipeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
+            R.id.app_bar_add_a_person -> showSendRecipeDialog()
         }
         return super.onOptionsItemSelected(item)
     }

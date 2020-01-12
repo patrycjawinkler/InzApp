@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">InzApp</string>
-    <string name="panel_name">InzApp</string>
-    <string name="welcome_text">Hello User!</string>
+    <string name="app_name">Kappitan Cook</string>
+    <string name="panel_name">Kappitan Cook</string>
+    <string name="app_logo">Logo aplikacji</string>
     <string name="email_address">Adres e-mail</string>
     <string name="password">Hasło</string>
     <string name="login">Zaloguj się</string>
@@ -39,9 +39,11 @@
     <string name="meal_type_ic">Ikona typu posiłku</string>
     <string name="time_to_prepare_ic">Ikona czasu przygotowania</string>
     <string name="send_a_recipe">Wyślij przepis</string>
+    <string name="enter_email">Wpisz adres e-mail</string>
     <string name="options">Opcje</string>
     <string name="add_to_shopping_list">Dodaj do listy zakupów</string>
     <string name="search">Szukaj</string>
+    <string name="main">Ekran główny</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

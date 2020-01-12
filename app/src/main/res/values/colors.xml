@@ -15,5 +15,6 @@
     <color name="darkgray">#3A0A0A0A</color>
     <color name="black">#000000</color>
     <color name="purple">#7a33a5</color>
+    <color name="light">#1F027D91</color>
 
 </resources>
