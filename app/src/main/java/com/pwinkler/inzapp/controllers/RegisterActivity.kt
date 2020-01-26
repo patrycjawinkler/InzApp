@@ -30,6 +30,7 @@ class RegisterActivity: AppCompatActivity() {
         val nameTextView = findViewById<EditText>(R.id.input_nickname)
         val emailTextView = findViewById<EditText>(R.id.input_email)
         val passwordTextView = findViewById<EditText>(R.id.input_password)
+        val repeatPasswordTexView = findViewById<EditText>(R.id.repeat_password)
 
         /**Podpięcie przycisku, który wywołuje rejestrację**/
         val signUpButton = findViewById<Button>(R.id.sign_up_button)
@@ -37,8 +38,11 @@ class RegisterActivity: AppCompatActivity() {
             val name = nameTextView.text.toString()
             val email = emailTextView.text.toString()
             val password = passwordTextView.text.toString()
-            if (email.isEmpty() || password.isEmpty() || name.isEmpty()){
+            val repeat = repeatPasswordTexView.text.toString()
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || repeat.isEmpty()){
                 Toast.makeText(this, "Proszę uzupełnić wszystkie pola", Toast.LENGTH_LONG).show()
+            } else if (password != repeat) {
+                Toast.makeText(this, "Wpisane hasła nie są takie same", Toast.LENGTH_LONG).show()
             } else {
                 fbAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->

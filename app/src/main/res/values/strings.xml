@@ -6,9 +6,9 @@
     <string name="password">Hasło</string>
     <string name="login">Zaloguj się</string>
     <string name="logout">Wyloguj się</string>
-    <string name="forgot_passowrd">Zapomniałeś hasła?</string>
+    <string name="forgot_passowrd">Przypomnij hasło</string>
     <string name="your_nickname">Nazwa użytkownika</string>
-    <string name="no_account">Nie masz konta? Zarejestruj się.</string>
+    <string name="no_account">Nie masz konta? Zarejestruj się</string>
     <string name="repeat_password">Powtórz hasło</string>
     <string name="sign_up">Zarejestruj się</string>
     <string name="already_member">Masz konto? Zaloguj się</string>
@@ -44,6 +44,9 @@
     <string name="add_to_shopping_list">Dodaj do listy zakupów</string>
     <string name="search">Szukaj</string>
     <string name="main">Ekran główny</string>
+    <string name="shopping_list_msg">Twoja lista zakupów jest pusta</string>
+    <string name="shopping_list_name">Nazwa</string>
+    <string name="create_shopping_list">Utwórz listę zakupów</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

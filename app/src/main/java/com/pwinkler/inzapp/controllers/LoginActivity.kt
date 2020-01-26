@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.pwinkler.inzapp.R
+import kotlin.system.exitProcess
 
 class LoginActivity: AppCompatActivity() {
 
@@ -20,7 +21,7 @@ class LoginActivity: AppCompatActivity() {
      * - jeśli tak to przechodzimy do ekranu głównego
      * - jeśli nie to przechodzimy do ekranu logowania
      */
-    val authStateListener = FirebaseAuth.AuthStateListener{ firebaseAuth ->
+    private val authStateListener = FirebaseAuth.AuthStateListener{ firebaseAuth ->
         if (firebaseAuth.currentUser != null) {
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
             startActivity(intent)
@@ -38,9 +39,8 @@ class LoginActivity: AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finishAffinity() //co to?
-        System.exit(0)
-        super.onBackPressed()
+        finishAffinity()
+        exitProcess(0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,13 +108,16 @@ class LoginActivity: AppCompatActivity() {
         }
 
         fbAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener (this, OnCompleteListener<AuthResult>{
-                task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
-                    Toast.makeText(this@LoginActivity, "Wystąpił błąd: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Podano błędny e-mail lub hasło",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            })
+            }
     }
 }

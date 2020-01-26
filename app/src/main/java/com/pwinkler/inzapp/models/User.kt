@@ -5,6 +5,8 @@ package com.pwinkler.inzapp.models
  *
  * @property uid - identyfikator Firebase
  * @property email - adres email użytkownika
+ * @property name - nazwa użytkownika
+ * @property invites - lista zaproszeń użytkownika
  */
 
 data class User (

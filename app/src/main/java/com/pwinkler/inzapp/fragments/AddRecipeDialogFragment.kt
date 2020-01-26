@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.*
@@ -74,7 +75,7 @@ class AddRecipeDialogFragment : DialogFragment() {
             listener = context as ModalListener
         } catch (exception: ClassCastException) {
             throw ClassCastException(
-                "$context musi implemenować AddCardDialogListener"
+                "$context musi implemenować AddRecipeDialogListener"
             )
         }
     }
@@ -230,7 +231,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                             dialogView.findViewById<EditText>(R.id.input_description)
 
                         val photoUid = UUID.randomUUID().toString()
-                        val imageRef = storageReference.child("images/" + photoUid)
+                        val imageRef = storageReference.child("images/$photoUid")
 
                         imageRef.putFile(mImageUri).apply {
                             progressBar.visibility = View.VISIBLE
@@ -278,7 +279,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
         ingredients++
 
-        if (ingredients > 20) {
+        if (ingredients > 30) {
             return
         }
 
@@ -401,7 +402,7 @@ class AddRecipeDialogFragment : DialogFragment() {
                 .get()
                 .load(mImageUri)
                 .resize(1200, 600)
-                .placeholder(R.drawable.applogo)
+                .placeholder(R.drawable.no_image_in_recipe)
                 .centerCrop()
                 .into(mImageView)
         }

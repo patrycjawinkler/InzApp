@@ -72,7 +72,7 @@ class SendRecipeDialogFragment : DialogFragment() {
             .get()
             .addOnSuccessListener {
                 if (it.isEmpty) {
-                    Toast.makeText(context, "Użytkownik nie istnieje", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Podany użytkownik nie istnieje", Toast.LENGTH_LONG).show()
                 } else {
                     val doc = it.documents[0]
                     val data = doc.data ?: throw NullPointerException()
