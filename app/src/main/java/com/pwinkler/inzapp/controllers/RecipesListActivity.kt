@@ -37,13 +37,11 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
 
     lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
     lateinit var recipeViewModel: RecipeViewModel
+
     private lateinit var navigationView: NavigationView
     private lateinit var navigationDrawer: DrawerLayout
 
-    private val userCollectionPath = "/users"
-
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
 
     private val authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
         if(firebaseAuth.currentUser == null) {
@@ -66,6 +64,9 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
             navigationDrawer.closeDrawer(GravityCompat.START)
         } else {
+            overridePendingTransition(0, 0)
+            startActivity(intent)
+            overridePendingTransition(0, 0)
             super.onBackPressed()
         }
     }

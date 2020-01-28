@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/app_bar_add_a_person"
+        android:icon="@drawable/ic_person_add_white_24dp"
+        android:title="@string/send_a_recipe"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/app_bar_remove_items_from_list"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/remove_items_from_list"
+        app:showAsAction="always"/>
+
+
+
+</menu>

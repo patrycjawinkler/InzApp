@@ -1,13 +1,19 @@
 package com.pwinkler.inzapp.viewmodels
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.pwinkler.inzapp.models.Recipe
 import com.pwinkler.inzapp.models.ShoppingList
+import com.pwinkler.inzapp.models.User
+import java.lang.NullPointerException
 
 class ShoppingListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,35 +21,67 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
     private val fbAuth = FirebaseAuth.getInstance()
     private val collectionPath = "/shopping_lists"
     private val shoppingListCollection = db.collection(collectionPath)
+    private var shoppingList: ShoppingList? = null
 
     val currentShoppingList = MutableLiveData<List<ShoppingList>>()
     val currentInviteList = MutableLiveData<List<String>>()
 
     fun addShoppingList(name: String, items: ArrayList<String>) {
 
-        val shoppingListReference = db.collection(collectionPath).document()
+        shoppingListCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val shoppingListReference = db.collection(collectionPath).document()
+                    val updatedShoppingList =
+                        ShoppingList(shoppingListReference.id, name, items, null)
 
-        val updatedShoppingList = ShoppingList(shoppingListReference.id, name, items, null)
+                    shoppingListReference.set(
+                        HashMap<String, Any>().apply {
+                            this["id"] = updatedShoppingList.id
+                            this["name"] = updatedShoppingList.name
+                            this["items"] = updatedShoppingList.items
+                            this["users"] = listOf(fbAuth.currentUser!!.uid)
+                        },
+                        SetOptions.merge()
+                    )
 
-        shoppingListReference.set(
-            HashMap<String, Any>().apply {
-                this["id"] = updatedShoppingList.id
-                this["name"] = updatedShoppingList.name
-                this["items"] = updatedShoppingList.items
-                this["users"] = listOf(fbAuth.currentUser!!.uid)
-            },
-            SetOptions.merge()
-        )
+                    val oldShoppingList = currentShoppingList.value
+                    val newShoppingList: List<ShoppingList>
+                    newShoppingList = if (oldShoppingList != null) {
+                        oldShoppingList + listOf(updatedShoppingList)
+                    } else {
+                        listOf(updatedShoppingList)
+                    }
 
-        val oldShoppingList = currentShoppingList.value
-        val newShoppingList: List<ShoppingList>
-        newShoppingList = if (oldShoppingList != null) {
-            oldShoppingList + listOf(updatedShoppingList)
-        } else {
-            listOf(updatedShoppingList)
-        }
+                    currentShoppingList.postValue(newShoppingList)
+                } else {
+                    for (document in documents) {
+                        Log.d("TAG", "document z addShoppingList: $document")
+                        val shoppingListId = document.id
+                        val data = HashMap<String, Any>()
+                        val currentItems = (shoppingList?.items ?: arrayListOf()) as MutableList<String>
 
-        currentShoppingList.postValue(newShoppingList)
+                        data["items"] = currentItems.apply {
+                            for (i in 0 until items.size) {
+                                add(items[i])
+                                db.collection(collectionPath)
+                                    .document(shoppingListId)
+                                    .update("items", FieldValue.arrayUnion(items[i]))
+                            }
+                        }
+                    }
+                }
+            }
+
+
+    }
+
+    fun deleteShoppingList(shoppingListId: ShoppingList?) {
+        val documentId = shoppingListId!!.id
+        db.collection(collectionPath).document(documentId)
+            .delete()
+            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
     }
 
     fun getUserShoppingList() {
@@ -71,4 +109,74 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
             }
     }
 
+    fun inviteUserToShoppingList(user: User, shoppingList: ShoppingList?) {
+        updateUserInviteList(user, shoppingList?.id)
+            .addOnSuccessListener {
+                addUserToShoppingList(user, shoppingList)
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Nie można wysłać listy zakupów", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun updateUserInviteList(user: User, shoppingListId: String?) : Task<Void> {
+        val data = HashMap<String, Any>()
+        val invites = user.invites as MutableList
+        Log.d("TAG", "invites z updateUserInviteList: $invites")
+        data["invites"] = invites.apply {
+            add(shoppingListId ?: "")
+        }
+
+        return db.collection("users")
+            .document(user.uid)
+            .update(data)
+    }
+
+    /**
+     * Funkcja dodaje nowego użytkownika do przepisu
+     */
+    private fun addUserToShoppingList(user: User, shoppingList: ShoppingList?) {
+        val data = HashMap<String, Any>()
+        val users = (shoppingList?.users ?: listOf()) as MutableList
+        Log.d("TAG", "users z addUserToShoppingList: $users")
+        data["users"] = users.apply {
+            add(user.uid)
+        }
+
+        db.collection(collectionPath)
+            .document(shoppingList?.id ?: "")
+            .update(data)
+    }
+
+    /**
+     * Funkcja, która bierze wszystkie zaproszenia użytkownika
+     * i na końcu wywołuje funkcję deleteInvites,  która je usuwa
+     */
+    fun getInvites() {
+        val uid = fbAuth.currentUser?.uid ?: return
+        Log.d("TAG", "Usuwanko: " + fbAuth.currentUser?.uid.toString())
+        db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener {
+                val data = it.data ?: throw NullPointerException()
+                Log.d("TAG", "it.data: $data")
+                val invites = (data["invites"] ?: throw NoSuchFieldException()) as ArrayList<String>
+                Log.d("TAG", "invites z getInvites: $invites")
+                currentInviteList.postValue(invites)
+                deleteInvites(uid)
+            }
+    }
+
+    /**
+     * Funkcja, która usuwa z bazy wszystkie zaproszenia użytkownika
+     */
+    private fun deleteInvites(uid: String) {
+        val data = HashMap<String, Any>()
+        data["invites"] = listOf("")
+
+        db.collection("users")
+            .document(uid)
+            .update(data)
+    }
 }

@@ -13,17 +13,14 @@ import com.pwinkler.inzapp.models.User
 import java.lang.ClassCastException
 import java.lang.NullPointerException
 
-class SendRecipeDialogFragment : DialogFragment() {
+class SendShoppingListDialogFragment : DialogFragment() {
 
     private lateinit var listener: ModalListener
     private lateinit var dialog: AlertDialog
     private val db = FirebaseFirestore.getInstance()
 
-    /**
-     *  Interfejs, który Activity musi zaimplementować jeśli chce korzystać z tego modala
-     */
     interface ModalListener {
-        fun onSendRecipePositiveClick(
+        fun onSendShoppingListPositiveClick(
             user: User
         )
     }
@@ -36,17 +33,16 @@ class SendRecipeDialogFragment : DialogFragment() {
         } catch (e: ClassCastException) {
             throw ClassCastException(
                 (context.toString() +
-                        "must implement SendRecipeDialogFragment")
+                        "must implement SendShoppingListDialogFragment")
             )
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let { activity ->
-
             val builder = AlertDialog.Builder(activity)
             val inflater = activity.layoutInflater
-            val dialogView = inflater.inflate(R.layout.send_recipe_modal, null)
+            val dialogView = inflater.inflate(R.layout.send_shopping_list_modal, null)
 
             dialog = builder.run {
                 setView(dialogView)
@@ -63,6 +59,7 @@ class SendRecipeDialogFragment : DialogFragment() {
                         proceedIfUserExist(emailEditText.text.toString())
                     }
             }
+
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
@@ -84,9 +81,10 @@ class SendRecipeDialogFragment : DialogFragment() {
                         (data["invites"] ?: throw NoSuchFieldException()) as ArrayList<String>
                     )
 
-                    listener.onSendRecipePositiveClick(user)
+                    listener.onSendShoppingListPositiveClick(user)
                     dialog.dismiss()
                 }
             }
     }
+
 }

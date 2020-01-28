@@ -6,6 +6,8 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -21,13 +23,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.fragments.AddShoppingListDialogFragment
+import com.pwinkler.inzapp.fragments.SendRecipeDialogFragment
+import com.pwinkler.inzapp.fragments.SendShoppingListDialogFragment
 import com.pwinkler.inzapp.helpers.DpSize
 import com.pwinkler.inzapp.models.Recipe
 import com.pwinkler.inzapp.models.ShoppingList
+import com.pwinkler.inzapp.models.User
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import com.pwinkler.inzapp.viewmodels.ShoppingListViewModel
 
-class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.ModalListener {
+class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.ModalListener, SendShoppingListDialogFragment.ModalListener {
 
     private var fbAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
@@ -36,7 +41,7 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
     lateinit var shoppingListViewModel: ShoppingListViewModel
 
-    val currentShoppingList = MutableLiveData<List<ShoppingList>>()
+    private var currentList : ShoppingList? = null
 
     private lateinit var navigationView: NavigationView
     private lateinit var navigationDrawer: DrawerLayout
@@ -71,8 +76,6 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
         setContentView(R.layout.shopping_list)
 
         dpSize = DpSize(this@ShoppingListActivity)
-
-        shoppingListViewModel = ViewModelProviders.of(this@ShoppingListActivity).get(ShoppingListViewModel::class.java)
 
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -123,11 +126,13 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
         val shoppingListReference = db.collection(collectionPath)
 
+        var checkStatus = false
+
         shoppingListReference.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     val shoppingListId = document.id
-                    //Log.d("TAG", "shoppingListID: $shoppingListId")
+                    Log.d("TAG", "shoppingListID: $shoppingListId")
                     val shoppingListDocument = shoppingListReference.document(shoppingListId)
 
                     shoppingListDocument.get()
@@ -159,8 +164,6 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
                                     val itemCheckBox = CheckBox(activity).apply {
                                         text = items[i]
                                         textSize = 18F
-                                        //Log.d("TAG", "checkbox: $isChecked")
-                                        //paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.MATCH_PARENT,
                                             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -169,22 +172,6 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
                                     }
 
                                     itemsContainerHorizontal.addView(itemCheckBox)
-
-
-                                    /**val itemNameTextView = TextView(activity).apply {
-                                        text = items[i]
-                                        textSize = 18F
-                                        paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                                        layoutParams = LinearLayout.LayoutParams(
-                                            LinearLayout.LayoutParams.MATCH_PARENT,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT
-                                        )
-                                        (layoutParams as LinearLayout.LayoutParams).setMargins(16, 16, 0, 16)
-                                    }
-
-                                    itemsContainerHorizontal.addView(itemNameTextView)
-
-                                    **/
 
                                     val separator2 = View(activity).apply {
                                         setBackgroundColor(Color.parseColor("#3A0A0A0A"))
@@ -200,15 +187,21 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
                                     itemCheckBox.setOnCheckedChangeListener { view, isChecked ->
                                         if (isChecked) {
+                                            checkStatus = true
                                             view.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                                             Log.d("TAG", "checkbox: $isChecked")
                                         } else {
+                                            checkStatus = false
                                             view.paintFlags = 0
                                         }
                                     }
                                 }
                             }
                         }
+
+                    shoppingListViewModel.currentShoppingList.observe(this@ShoppingListActivity, Observer {
+                        currentList = it.first { shoppingList -> shoppingList.id == shoppingListId }
+                    })
                 }
 
             }
@@ -218,11 +211,18 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
             }
 
 
-
         val newShoppingListFAB = findViewById<FloatingActionButton>(R.id.add_shopping_list_fab)
         newShoppingListFAB.setOnClickListener {
             showAddShoppingListDialog()
         }
+    }
+
+    private fun deleteShoppingList(id: ShoppingList?) {
+        shoppingListViewModel.deleteShoppingList(id)
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 
     private fun showAddShoppingListDialog() {
@@ -232,5 +232,35 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
     override fun onDialogPositiveClick(name: String, items: ArrayList<String>) {
         shoppingListViewModel.addShoppingList(name, items)
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
+
+    private fun showSendShoppingListDialog() {
+        val dialog = SendShoppingListDialogFragment()
+        dialog.show(supportFragmentManager, "SendShoppingListDialogFragment")
+    }
+
+    override fun onSendShoppingListPositiveClick(user: User) {
+        shoppingListViewModel.inviteUserToShoppingList(user, currentList)
+    }
+
+    /**
+     * Dodawanie ikonek do bottom app bar
+     */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.shopping_list_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
+            R.id.app_bar_add_a_person -> showSendShoppingListDialog()
+            R.id.app_bar_remove_items_from_list -> deleteShoppingList(currentList)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
 }

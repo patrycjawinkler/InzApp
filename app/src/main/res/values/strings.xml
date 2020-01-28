@@ -47,6 +47,8 @@
     <string name="shopping_list_msg">Twoja lista zakupów jest pusta</string>
     <string name="shopping_list_name">Nazwa</string>
     <string name="create_shopping_list">Utwórz listę zakupów</string>
+    <string name="remove_items_from_list">Wyczyść listę zakupów</string>
+    <string name="send_shopping_list">Wyślij listę zakupów</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

@@ -225,8 +225,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             .update(data)
     }
 
-
-
     /**
      * Funkcja wysyła przepis do innego użytkownika
      */
