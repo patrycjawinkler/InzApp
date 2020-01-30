@@ -26,6 +26,13 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
     val currentShoppingList = MutableLiveData<List<ShoppingList>>()
     val currentInviteList = MutableLiveData<List<String>>()
 
+    /**
+     * Funkcja sprawdza czy użytkownik, który chce stworzyć listę, posiada już
+     * listę zakupów. Jeżeli tak, dodanie listy zakupów sprawi, że dodadzą się
+     * kolejne pozycje na liście. Jeżeli użytkownik chce stworzyć listę od nowa
+     * najpierw musi wyczyścić listę, klikając w ikonę kosza.
+     *
+     */
     fun addShoppingList(name: String, items: ArrayList<String>) {
 
         shoppingListCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
@@ -72,18 +79,45 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
                     }
                 }
             }
-
-
     }
 
+    /**
+     * Funkcja, która usuwa listę zakupów użytkownika, jeżeli liczba użytkowników
+     * danej listy wynosi 1. Jeżeli daną listę posiada więcej niż jednego użytkownika,
+     * funkcja usunie id aktualnego użytkownika z tablicy users.
+     */
     fun deleteShoppingList(shoppingListId: ShoppingList?) {
-        val documentId = shoppingListId!!.id
-        db.collection(collectionPath).document(documentId)
-            .delete()
-            .addOnSuccessListener { Log.d("TAG", "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w("TAG", "Error deleting document", e) }
+        shoppingListCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
+            .addOnSuccessListener {
+                val documentId = shoppingListId!!.id
+                val userId = fbAuth.currentUser?.uid
+                val data = HashMap<String, Any>()
+                val currentUsers = (shoppingListId.users ?: listOf()) as MutableList
+                if (currentUsers.count() == 1) {
+                    Log.d("TAG", "currentUsers.count: ${currentUsers.count()}")
+                    shoppingListCollection.document(documentId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d("TAG", "DocumentSnapshot successfully deleted!")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("TAG", "Error deleting document", e
+                            )
+                        }
+                } else {
+                    data["users"] = currentUsers.apply {
+                        shoppingListCollection
+                            .document(documentId)
+                            .update("users", FieldValue.arrayRemove(userId))
+                    }
+                }
+            }
     }
 
+    /**
+     * Funkcja wyszukuje listę zakupów, którą posiada dany użytkownik
+     * pobiera ją i zwraca jej wartości
+     */
     fun getUserShoppingList() {
         shoppingListCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
             .addOnSuccessListener { document ->
@@ -109,6 +143,9 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
             }
     }
 
+    /**
+     * Funkcja zaprasza użytkownika do danej listy zakupów
+     */
     fun inviteUserToShoppingList(user: User, shoppingList: ShoppingList?) {
         updateUserInviteList(user, shoppingList?.id)
             .addOnSuccessListener {
@@ -119,6 +156,9 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
             }
     }
 
+    /**
+     * Funkcja aktualizuje listę zaproszeń odbiorcy
+     */
     private fun updateUserInviteList(user: User, shoppingListId: String?) : Task<Void> {
         val data = HashMap<String, Any>()
         val invites = user.invites as MutableList

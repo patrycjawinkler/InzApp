@@ -49,6 +49,9 @@
     <string name="create_shopping_list">Utwórz listę zakupów</string>
     <string name="remove_items_from_list">Wyczyść listę zakupów</string>
     <string name="send_shopping_list">Wyślij listę zakupów</string>
+    <string name="no_idea_with_recipe">Brak pomysłu na przepis?</string>
+    <string name="draw">Losuj</string>
+    <string name="maybe_that">A może…</string>
 
     <string-array name="meal_types">
         <item>Śniadanie</item>

@@ -140,10 +140,10 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
                             if (document2 != null) {
                                 shoppingListName?.text = document2.getString("name")
 
-                                val items = document2["items"] as ArrayList<String>
+                                val items = document2["items"] as? ArrayList<String>
 
                                 val activity = this@ShoppingListActivity
-                                for (i in 0 until items.size) {
+                                for (i in 0 until (items?.size ?: 0)) {
 
                                     val itemsContainerVertical = LinearLayout(activity).apply {
                                         orientation = LinearLayout.VERTICAL
@@ -162,7 +162,7 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
                                     }
 
                                     val itemCheckBox = CheckBox(activity).apply {
-                                        text = items[i]
+                                        text = items?.get(i) ?: ""
                                         textSize = 18F
                                         layoutParams = LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -223,6 +223,7 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
         overridePendingTransition(0, 0)
         startActivity(intent)
         overridePendingTransition(0, 0)
+        this.recreate()
     }
 
     private fun showAddShoppingListDialog() {
@@ -232,9 +233,11 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
     override fun onDialogPositiveClick(name: String, items: ArrayList<String>) {
         shoppingListViewModel.addShoppingList(name, items)
+        finish()
         overridePendingTransition(0, 0)
         startActivity(intent)
         overridePendingTransition(0, 0)
+        this.recreate()
     }
 
     private fun showSendShoppingListDialog() {

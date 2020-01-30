@@ -118,6 +118,10 @@ class MainActivity : AppCompatActivity() {
         shoppingListViewModel = ViewModelProviders.of(this@MainActivity).get(ShoppingListViewModel::class.java)
         shoppingListViewModel.getUserShoppingList()
 
+        shoppingListViewModel.currentShoppingList.observe(this@MainActivity, Observer {
+            showNewShoppingListNotification()
+        })
+
         shoppingListViewModel.getInvites()
         shoppingListViewModel.currentInviteList.observe(this@MainActivity, Observer {
             showNewShoppingListNotification()

@@ -35,8 +35,8 @@ import kotlin.system.exitProcess
 
 class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalListener {
 
-    lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
-    lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var recipeRecycleAdapter: RecipesListRecycleAdapter
+    private lateinit var recipeViewModel: RecipeViewModel
 
     private lateinit var navigationView: NavigationView
     private lateinit var navigationDrawer: DrawerLayout
@@ -64,9 +64,6 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
         if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
             navigationDrawer.closeDrawer(GravityCompat.START)
         } else {
-            overridePendingTransition(0, 0)
-            startActivity(intent)
-            overridePendingTransition(0, 0)
             super.onBackPressed()
         }
     }

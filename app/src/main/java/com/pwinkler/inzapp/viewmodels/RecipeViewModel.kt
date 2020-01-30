@@ -269,4 +269,22 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             .document(recipe?.id ?: "")
             .update(data)
     }
+
+    /**fun getRandomRecipeId() : String {
+        val allRecipesArray = arrayListOf<String>()
+        db.collection(collectionPath)
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    allRecipesArray.add(document.id)
+                }
+                allRecipesArray.random()
+                Log.d("TAG", "Losowy przepis: ${allRecipesArray.random()}")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "Error getting documents: ", exception)
+            }
+        return allRecipesArray.random()
+    }
+    **/
 }

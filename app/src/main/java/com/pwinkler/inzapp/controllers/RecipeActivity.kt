@@ -88,6 +88,10 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
             setLogoutAction {
                 fbAuth.signOut()
             }
+            setMainActivityAction {
+                val intent = Intent(this@RecipeActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
             setRecipeListAction {
                 val intent = Intent(this@RecipeActivity, RecipesListActivity::class.java)
                 startActivity(intent)
@@ -115,6 +119,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
         }
 
         val selectedRecipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
+
         Log.d("TAG", "selectedRecipeId: $selectedRecipeId")
         val activity = this@RecipeActivity
 
@@ -281,7 +286,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
             .addOnFailureListener { exception ->
                 Log.d("TAG", "Get failed with recipe database", exception)
             }
-        }
+    }
 
     private fun showSendRecipeDialog() {
         val dialog = SendRecipeDialogFragment()

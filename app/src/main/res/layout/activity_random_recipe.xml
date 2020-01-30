@@ -1,70 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.drawerlayout.widget.DrawerLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/drawer_layout"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:fitsSystemWindows="true">
-
-<ScrollView
-    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="2000dp">
 
-        <LinearLayout
-            android:id="@+id/shopping_list_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/random_recipe_toolbar"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Tu będzie funkcja losująca obiad"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="?attr/colorPrimary"
+                android:theme="?attr/actionBarTheme"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" /> />
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/no_idea_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/no_idea_with_recipe"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/random_recipe_toolbar" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/draw_recipe_button"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/circular_button"
+                android:text="@string/draw"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/no_idea_text_view" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/recipe_proposition_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/maybe_that"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/draw_recipe_button" />
 
-<com.google.android.material.navigation.NavigationView
-    android:id="@+id/navigation_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp"
-    app:itemBackground="@drawable/nav_bg_colors"
-    app:menu="@menu/drawer_menu"
-    app:headerLayout="@layout/navigation_header" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/recipe_proposition_card"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                app:cardElevation="3dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recipe_proposition_text_view"
+                tools:srcCompat="@android:color/holo_orange_light">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/recipe_list_item_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        android:id="@+id/dish_image"
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:contentDescription="@string/dish_image"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:srcCompat="@drawable/dish_example" />
+
+                    <ImageView
+                        android:id="@+id/favorite_ic"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="8dp"
+                        android:contentDescription="@string/chosen"
+                        app:layout_constraintEnd_toStartOf="@+id/chosen_ic"
+                        app:layout_constraintTop_toBottomOf="@+id/meal_type_text"
+                        tools:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+
+                    <ImageView
+                        android:id="@+id/chosen_ic"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@string/favorite"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/meal_type_text"
+                        tools:srcCompat="@drawable/ic_bookmark_border_black_24dp" />
+
+                    <TextView
+                        android:id="@+id/dish_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="4dp"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.055"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_image"
+                        tools:text="Nazwa posiłku" />
+
+                    <ImageView
+                        android:id="@+id/time_ic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/time_to_prepare_ic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_type_text"
+                        tools:srcCompat="@drawable/ic_time_24dp" />
+
+                    <TextView
+                        android:id="@+id/time_to_prepare"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="4dp"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/time_ic"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_type_text"
+                        tools:text="45 min" />
+
+                    <ImageView
+                        android:id="@+id/dish_type_ic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/dish_type_ic"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_name"
+                        tools:srcCompat="@drawable/ic_dish_24dp" />
+
+                    <TextView
+                        android:id="@+id/dish_type_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="4dp"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/dish_type_ic"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_name"
+                        tools:text="Obiad" />
+
+                    <ImageView
+                        android:id="@+id/meal_type_ic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/meal_type_ic"
+                        app:layout_constraintStart_toEndOf="@+id/dish_type_text"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_name"
+                        tools:srcCompat="@drawable/ic_meal_type_24dp" />
+
+                    <TextView
+                        android:id="@+id/meal_type_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="4dp"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/meal_type_ic"
+                        app:layout_constraintTop_toBottomOf="@+id/dish_name"
+                        tools:text="Mięsne" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:itemBackground="@drawable/nav_bg_colors"
+        app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/navigation_header" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
