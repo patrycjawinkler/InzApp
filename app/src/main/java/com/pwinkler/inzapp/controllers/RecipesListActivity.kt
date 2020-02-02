@@ -2,12 +2,9 @@ package com.pwinkler.inzapp.controllers
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -21,17 +18,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.internal.NavigationMenu
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.fragments.AddRecipeDialogFragment
 import com.pwinkler.inzapp.models.Recipe
-import com.pwinkler.inzapp.models.User
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
-import kotlin.system.exitProcess
 
 class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalListener {
 
@@ -104,7 +97,7 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@RecipesListActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@RecipesListActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {

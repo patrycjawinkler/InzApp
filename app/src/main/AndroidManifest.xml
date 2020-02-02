@@ -31,7 +31,7 @@
         <activity android:name=".controllers.ShoppingListActivity">
         </activity>
 
-        <activity android:name=".controllers.ProposeRecipeActivity">
+        <activity android:name=".controllers.FilterRecipesActivity">
         </activity>
 
         <activity android:name=".controllers.RandomRecipeActivity">

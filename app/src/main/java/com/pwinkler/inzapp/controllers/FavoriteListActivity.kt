@@ -93,7 +93,7 @@ class FavoriteListActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@FavoriteListActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@FavoriteListActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {

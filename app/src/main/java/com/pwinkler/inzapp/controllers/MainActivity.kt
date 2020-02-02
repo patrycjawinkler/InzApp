@@ -7,9 +7,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
 import android.view.View
-import android.widget.Button
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
@@ -19,10 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.pwinkler.inzapp.*
-import com.pwinkler.inzapp.adapters.RecipesListRecycleAdapter
 import com.pwinkler.inzapp.models.ShoppingList
 import com.pwinkler.inzapp.viewmodels.ShoppingListViewModel
-import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -64,12 +60,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (navigationDrawer.isDrawerOpen(GravityCompat.START)) {
-            navigationDrawer.closeDrawer(GravityCompat.START)
-        } else {
-            finishAffinity()
-            exitProcess(0)
-        }
+        finishAffinity()
+        exitProcess(0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@MainActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@MainActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {
@@ -115,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        shoppingListViewModel = ViewModelProviders.of(this@MainActivity).get(ShoppingListViewModel::class.java)
+        /**shoppingListViewModel = ViewModelProviders.of(this@MainActivity).get(ShoppingListViewModel::class.java)
         shoppingListViewModel.getUserShoppingList()
 
         shoppingListViewModel.currentShoppingList.observe(this@MainActivity, Observer {
@@ -126,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         shoppingListViewModel.currentInviteList.observe(this@MainActivity, Observer {
             showNewShoppingListNotification()
         })
+        **/
 
         val recipesListCV = findViewById<CardView>(R.id.my_recipes_card)
         val shoppingListCV = findViewById<CardView>(R.id.shopping_list_card)
@@ -155,10 +148,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun goToProposeRecipeActivity() {
-        val intent = Intent(this, ProposeRecipeActivity::class.java)
+        val intent = Intent(this, FilterRecipesActivity::class.java)
         startActivity(intent)
     }
-
+    /**
     private fun showNewShoppingListNotification() {
         val shoppingList = shoppingListViewModel.currentShoppingList.value ?: return
         val invites = shoppingListViewModel.currentInviteList.value ?: return
@@ -169,6 +162,8 @@ class MainActivity : AppCompatActivity() {
                 showNotification("Otrzymałeś listę zakupów: ", list.name)
             }
     }
+
+
 
     private fun getShoppingListFromId(shoppingLists: List<ShoppingList>, id: String): ShoppingList {
         return shoppingLists.first { it.id == id}
@@ -190,4 +185,5 @@ class MainActivity : AppCompatActivity() {
             .setAutoCancel(true) //usuń powiadomienie po kliknięciu
         mNotificationManager.notify(0, mBuilder.build())
     }
+    **/
 }

@@ -65,7 +65,7 @@ fun NavigationView.setRandomRecipeAction(onClick: () -> Unit) {
 }
 
 fun NavigationView.setGiveRecipeAction(onClick: () -> Unit) {
-    val giveRecipeButton = this.menu.findItem(R.id.nav_give_recipe)
+    val giveRecipeButton = this.menu.findItem(R.id.nav_filter_recipes)
     giveRecipeButton.setOnMenuItemClickListener {
         onClick()
         true

@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.squareup.picasso.Picasso
 import com.pwinkler.inzapp.controllers.RecipesListActivity.Companion.EXTRA_RECIPE_ID
+import com.pwinkler.inzapp.fragments.DeleteRecipeDialogFragment
 import com.pwinkler.inzapp.fragments.SendRecipeDialogFragment
 import com.pwinkler.inzapp.helpers.DpSize
 import com.pwinkler.inzapp.models.Recipe
@@ -27,7 +28,7 @@ import com.pwinkler.inzapp.models.User
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import java.util.*
 
-class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListener {
+class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListener, DeleteRecipeDialogFragment.ModalListener {
 
     private val recipeCollectionPath = "/recipes"
     private val productCollectionPath = "/products"
@@ -105,7 +106,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@RecipeActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@RecipeActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {
@@ -297,6 +298,21 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
         recipeViewModel.inviteUser(user, currentRecipe)
     }
 
+    private fun showDeleteRecipeDialog() {
+        val dialog = DeleteRecipeDialogFragment()
+        dialog.show(supportFragmentManager, "DeleteRecipeDialogFragment")
+    }
+
+    override fun onDeleteRecipePositiveClick() {
+        recipeViewModel.deleteRecipe(currentRecipe)
+        val intent = Intent(this@RecipeActivity, RecipesListActivity::class.java)
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
+        finish()
+    }
+
+
     /**
      * Dodawanie ikonek do bottom app bar
      */
@@ -309,6 +325,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
         when (item.itemId) {
             android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
             R.id.app_bar_add_a_person -> showSendRecipeDialog()
+            R.id.app_bar_delete_recipe -> showDeleteRecipeDialog()
         }
         return super.onOptionsItemSelected(item)
     }

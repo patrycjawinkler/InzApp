@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,9 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -23,13 +20,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
 import com.pwinkler.inzapp.fragments.AddShoppingListDialogFragment
-import com.pwinkler.inzapp.fragments.SendRecipeDialogFragment
 import com.pwinkler.inzapp.fragments.SendShoppingListDialogFragment
 import com.pwinkler.inzapp.helpers.DpSize
-import com.pwinkler.inzapp.models.Recipe
 import com.pwinkler.inzapp.models.ShoppingList
 import com.pwinkler.inzapp.models.User
-import com.pwinkler.inzapp.viewmodels.RecipeViewModel
 import com.pwinkler.inzapp.viewmodels.ShoppingListViewModel
 
 class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.ModalListener, SendShoppingListDialogFragment.ModalListener {
@@ -105,7 +99,7 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@ShoppingListActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@ShoppingListActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {

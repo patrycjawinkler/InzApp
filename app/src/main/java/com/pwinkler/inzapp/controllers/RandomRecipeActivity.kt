@@ -3,7 +3,6 @@ package com.pwinkler.inzapp.controllers
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
@@ -17,9 +16,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pwinkler.inzapp.*
-import com.pwinkler.inzapp.helpers.DpSize
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
-import com.pwinkler.inzapp.viewmodels.ShoppingListViewModel
 import com.squareup.picasso.Picasso
 
 class RandomRecipeActivity: AppCompatActivity() {
@@ -93,7 +90,7 @@ class RandomRecipeActivity: AppCompatActivity() {
                 startActivity(intent)
             }
             setGiveRecipeAction {
-                val intent = Intent(this@RandomRecipeActivity, ProposeRecipeActivity::class.java)
+                val intent = Intent(this@RandomRecipeActivity, FilterRecipesActivity::class.java)
                 startActivity(intent)
             }
             setFavoriteRecipesAction {

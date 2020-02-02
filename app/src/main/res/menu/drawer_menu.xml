@@ -30,9 +30,9 @@
             android:checkable="true" />
 
         <item
-            android:id="@+id/nav_give_recipe"
+            android:id="@+id/nav_filter_recipes"
             android:icon="@drawable/ic_give_recipe_50dp"
-            android:title="@string/give_recipe"
+            android:title="@string/filter_recipes"
             android:checkable="true" />
 
         <item

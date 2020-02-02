@@ -15,9 +15,9 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/app_bar_settings"
-        android:icon="@drawable/ic_more_vert_white_24dp"
-        android:title="@string/options"
-        app:showAsAction="ifRoom"/>
+        android:id="@+id/app_bar_delete_recipe"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/delete_recipe"
+        app:showAsAction="always"/>
 
 </menu>

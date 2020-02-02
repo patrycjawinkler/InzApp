@@ -15,7 +15,7 @@
     <string name="my_recipes">Moje przepisy</string>
     <string name="shopping_list">Lista zakupów</string>
     <string name="random_recipe">Losuj przepis</string>
-    <string name="give_recipe">Podaj przepis</string>
+    <string name="filter_recipes">Filtruj przepisy</string>
     <string name="find_recipe">Znajdź przepis</string>
     <string name="add_recipe">Dodaj nowy przepis</string>
     <string name="dish_name">Nazwa dania</string>
@@ -52,8 +52,12 @@
     <string name="no_idea_with_recipe">Brak pomysłu na przepis?</string>
     <string name="draw">Losuj</string>
     <string name="maybe_that">A może…</string>
+    <string name="only_favorite">Tylko ulubione</string>
+    <string name="start_filtering">Filtruj</string>
+    <string name="delete_recipe">Usuń przepis</string>
+    <string name="delete_recipe_question">Na pewno chcesz usunąć przepis?</string>
 
-    <string-array name="meal_types">
+    <string-array name="dish_types">
         <item>Śniadanie</item>
         <item>Obiad</item>
         <item>Kolacja</item>
@@ -61,19 +65,54 @@
         <item>Przystawka</item>
         <item>Napój</item>
     </string-array>
-    <string-array name="dish_types">
+
+    <string-array name="meal_types">
         <item>Mięsne</item>
         <item>Wegetariańskie</item>
         <item>Wegańskie</item>
         <item>Fit</item>
         <item>Dla dzieci</item>
     </string-array>
+
     <string-array name="time_to_prepare">
         <item>Do 15 min</item>
         <item>15–30 min</item>
         <item>30–60 min</item>
         <item>Ponad 60 min</item>
     </string-array>
+
+    <string-array name="dish_types_filtering">
+        <item>Bez znaczenia</item>
+        <item>Śniadanie</item>
+        <item>Obiad</item>
+        <item>Kolacja</item>
+        <item>Deser</item>
+        <item>Przystawka</item>
+        <item>Napój</item>
+    </string-array>
+
+    <string-array name="meal_types_filtering">
+        <item>Bez znaczenia</item>
+        <item>Mięsne</item>
+        <item>Wegetariańskie</item>
+        <item>Wegańskie</item>
+        <item>Fit</item>
+        <item>Dla dzieci</item>
+    </string-array>
+
+    <string-array name="time_to_prepare_filtering">
+        <item>Bez znaczenia</item>
+        <item>Do 15 min</item>
+        <item>15–30 min</item>
+        <item>30–60 min</item>
+        <item>Ponad 60 min</item>
+    </string-array>
+
+    <string-array name="only_favorite">
+        <item>Nie</item>
+        <item>Tak</item>
+    </string-array>
+
     <string-array name="units">
         <item>g</item>
         <item>dag</item>
@@ -86,4 +125,5 @@
         <item>łyżecz.</item>
         <item>szczypta</item>
     </string-array>
+
 </resources>

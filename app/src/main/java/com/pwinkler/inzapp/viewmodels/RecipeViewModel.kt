@@ -1,16 +1,23 @@
 package com.pwinkler.inzapp.viewmodels
 
 import android.app.Application
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.StorageReference
+import com.pwinkler.inzapp.controllers.RecipeActivity
+import com.pwinkler.inzapp.controllers.RecipesListActivity
 import com.pwinkler.inzapp.models.Recipe
 import com.pwinkler.inzapp.models.User
 import java.lang.NullPointerException
@@ -28,136 +35,11 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
     private val recipeCollection = db.collection(collectionPath)
 
     /**
-     * Funkcja, która pobiera z bazy wszystkie przepisy użytkownika
-     */
-    fun getAllUserRecipes() {
-        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
-            .addOnSuccessListener { documents ->
-                currentRecipeList.postValue(
-                    documents.map { recipe ->
-                        val data = recipe.data
-                        val id = recipe.id
-                        val name = data["name"] ?: throw NoSuchFieldException()
-                        val description = data["description"] ?: throw NoSuchFieldException()
-                        val image = data["image_id"] ?: ""
-                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
-                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
-                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
-                        val ingredients = data["ingredients"] ?: arrayListOf("")
-                        val favorite = data["favorite"] ?: ""
-                        val chosen = data["chosen"] ?: ""
-                        val users = data["users"] ?: throw NoSuchFieldException()
-
-                        Recipe(
-                            id,
-                            name as String,
-                            description as String,
-                            image as String,
-                            timeToPrepare as String,
-                            mealType as String,
-                            dishType as String,
-                            ingredients as ArrayList<String>,
-                            favorite as Boolean,
-                            chosen as Boolean,
-                            users as List<String>
-                        )
-                    }
-                )
-            }
-            .addOnFailureListener {
-                Toast.makeText(getApplication(), "Pobieranie wszystkich przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
-            }
-    }
-
-    /**
-     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
-     */
-    fun getAllFavoriteUserRecipes() {
-        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("favorite", true).get()
-            .addOnSuccessListener { documents ->
-                currentRecipeList.postValue(
-                    documents.map { recipe ->
-                        val data = recipe.data
-                        val id = recipe.id
-                        val name = data["name"] ?: throw NoSuchFieldException()
-                        val description = data["description"] ?: throw NoSuchFieldException()
-                        val image = data["image_id"] ?: ""
-                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
-                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
-                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
-                        val ingredients = data["ingredients"] ?: arrayListOf("")
-                        val favorite = data["favorite"] ?: ""
-                        val chosen = data["chosen"] ?: ""
-                        val users = data["users"] ?: throw NoSuchFieldException()
-
-                        Recipe(
-                            id,
-                            name as String,
-                            description as String,
-                            image as String,
-                            timeToPrepare as String,
-                            mealType as String,
-                            dishType as String,
-                            ingredients as ArrayList<String>,
-                            favorite as Boolean,
-                            chosen as Boolean,
-                            users as List<String>
-                        )
-                    }
-                )
-            }
-            .addOnFailureListener {
-                Toast.makeText(getApplication(), "Pobieranie ulubionych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
-            }
-    }
-
-    /**
-     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
-     */
-    fun getAllChosenUserRecipes() {
-        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("chosen", true).get()
-            .addOnSuccessListener { documents ->
-                currentRecipeList.postValue(
-                    documents.map { recipe ->
-                        val data = recipe.data
-                        val id = recipe.id
-                        val name = data["name"] ?: throw NoSuchFieldException()
-                        val description = data["description"] ?: throw NoSuchFieldException()
-                        val image = data["image_id"] ?: ""
-                        val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
-                        val mealType = data["meal_type"] ?: throw NoSuchFieldException()
-                        val dishType = data["dish_type"] ?: throw NoSuchFieldException()
-                        val ingredients = data["ingredients"] ?: arrayListOf("")
-                        val favorite = data["favorite"] ?: ""
-                        val chosen = data["chosen"] ?: ""
-                        val users = data["users"] ?: throw NoSuchFieldException()
-
-                        Recipe(
-                            id,
-                            name as String,
-                            description as String,
-                            image as String,
-                            timeToPrepare as String,
-                            mealType as String,
-                            dishType as String,
-                            ingredients as ArrayList<String>,
-                            favorite as Boolean,
-                            chosen as Boolean,
-                            users as List<String>
-                        )
-                    }
-                )
-            }
-            .addOnFailureListener {
-                Toast.makeText(getApplication(), "Pobieranie wybranych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
-            }
-    }
-
-    /**
      * Funkcja, która dodaje przespis do bazy
      */
     fun addRecipe(name: String, description: String, image_id: String, time_to_prepare: String,
-                  meal_type: String, dish_type: String, ingredients: ArrayList<String>, favorite: Boolean = false, chosen: Boolean = false) {
+                  meal_type: String, dish_type: String, ingredients: ArrayList<String>,
+                  favorite: Boolean = false, chosen: Boolean = false) {
 
         //Utwórz nowy dokument i pobierz referencje (id jest tworzone automatycznie)
         val recipeReference = db.collection(collectionPath).document()
@@ -191,6 +73,275 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         currentRecipeList.postValue(newRecipeList)
+    }
+
+    fun deleteRecipe(recipeId: Recipe?) {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
+            .addOnSuccessListener {
+                val documentId = recipeId!!.id
+                val userId = fbAuth.currentUser?.uid
+                val data = HashMap<String, Any>()
+                val currentUsers = (recipeId.users ?: listOf()) as MutableList
+                if (currentUsers.count() == 1) {
+                    Log.d("TAG", "currentUsers.count: ${currentUsers.count()}")
+                    recipeCollection.document(documentId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d("TAG", "DocumentSnapshot successfully deleted!")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("TAG", "Error deleting document", e)
+                        }
+                } else {
+                    data["users"] = currentUsers.apply {
+                        recipeCollection
+                            .document(documentId)
+                            .update("users", FieldValue.arrayRemove(userId))
+                    }
+                }
+            }
+    }
+
+    /**
+     * Wydzielona funkcja ustawiająca aktualną listę przepisów,
+     * które mają się wyświetlać na ekranie
+     */
+    private fun setCurrentRecipeList(param: QuerySnapshot) {
+        currentRecipeList.postValue(
+            param.map { recipe ->
+                val data = recipe.data
+                val id = recipe.id
+                val name = data["name"] ?: throw NoSuchFieldException()
+                val description = data["description"] ?: throw NoSuchFieldException()
+                val image = data["image_id"] ?: ""
+                val timeToPrepare = data["time_to_prepare"] ?: throw NoSuchFieldException()
+                val mealType = data["meal_type"] ?: throw NoSuchFieldException()
+                val dishType = data["dish_type"] ?: throw NoSuchFieldException()
+                val ingredients = data["ingredients"] ?: arrayListOf("")
+                val favorite = data["favorite"] ?: ""
+                val chosen = data["chosen"] ?: ""
+                val users = data["users"] ?: throw NoSuchFieldException()
+
+                Recipe(
+                    id,
+                    name as String,
+                    description as String,
+                    image as String,
+                    timeToPrepare as String,
+                    mealType as String,
+                    dishType as String,
+                    ingredients as ArrayList<String>,
+                    favorite as Boolean,
+                    chosen as Boolean,
+                    users as List<String>
+                )
+            }
+        )
+    }
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie przepisy użytkownika
+     */
+    fun getAllUserRecipes() {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
+            .addOnSuccessListener { documents ->
+                setCurrentRecipeList(documents)
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Pobieranie wszystkich przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
+     */
+    fun getAllFavoriteUserRecipes() {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("favorite", true).get()
+            .addOnSuccessListener { documents ->
+                setCurrentRecipeList(documents)
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Pobieranie ulubionych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /**
+     * Funkcja, która pobiera z bazy wszystkie ulubione przepisy użytkownika
+     */
+    fun getAllChosenUserRecipes() {
+        recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").whereEqualTo("chosen", true).get()
+            .addOnSuccessListener { documents ->
+                setCurrentRecipeList(documents)
+            }
+            .addOnFailureListener {
+                Toast.makeText(getApplication(), "Pobieranie wybranych przepisów z bazy nie powiodło się", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    /**
+     * Funkcja, która filtruje przepisy na podstawie wybranych parametrów
+     * na ekranie 'Filtruj przepisy' (FilterRecipesActivity)
+     */
+    fun getFilteredRecipes(meal_type_chosen: String, dish_type_chosen: String, time_to_prepare_chosen: String, only_favorite_chosen: String) {
+        if (meal_type_chosen == "Bez znaczenia" && dish_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia" && only_favorite_chosen == "Nie") {
+            getAllUserRecipes()
+        } else if (meal_type_chosen == "Bez znaczenia" && dish_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia" && only_favorite_chosen == "Tak") {
+            getAllFavoriteUserRecipes()
+        } else if (only_favorite_chosen == "Tak") {
+            when {
+                meal_type_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .whereEqualTo("favorite", true)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                dish_type_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .whereEqualTo("favorite", true)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                time_to_prepare_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .whereEqualTo("favorite", true)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                else -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .whereEqualTo("favorite", true)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+            }
+            if (meal_type_chosen == "Bez znaczenia" && dish_type_chosen == "Bez znaczenia") {
+                recipeCollection
+                    .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                    .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                    .whereEqualTo("favorite", true)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        setCurrentRecipeList(documents)
+                    }
+            } else if (meal_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia") {
+                recipeCollection
+                    .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                    .whereEqualTo("dish_type", dish_type_chosen)
+                    .whereEqualTo("favorite", true)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        setCurrentRecipeList(documents)
+                    }
+            } else if (dish_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia") {
+                recipeCollection
+                    .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                    .whereEqualTo("meal_type", meal_type_chosen)
+                    .whereEqualTo("favorite", true)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        setCurrentRecipeList(documents)
+                    }
+            }
+        } else if (only_favorite_chosen == "Nie") {
+            when {
+                meal_type_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                dish_type_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                time_to_prepare_chosen == "Bez znaczenia" -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+                else -> {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                        }
+                }
+            }
+                if (meal_type_chosen == "Bez znaczenia" && dish_type_chosen == "Bez znaczenia") {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("time_to_prepare", time_to_prepare_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                            for (document in documents) {
+                                Log.d("TAG", "Lista pasujących przepisów: ${document.id}")
+                            }
+                        }
+                } else if (meal_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia") {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("dish_type", dish_type_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                            for (document in documents) {
+                                Log.d("TAG", "Lista pasujących przepisów: ${document.id}")
+                            }
+                        }
+                } else if (dish_type_chosen == "Bez znaczenia" && time_to_prepare_chosen == "Bez znaczenia") {
+                    recipeCollection
+                        .whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+                        .whereEqualTo("meal_type", meal_type_chosen)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            setCurrentRecipeList(documents)
+                            for (document in documents) {
+                                Log.d("TAG", "Lista pasujących przepisów: ${document.id}")
+                            }
+                        }
+                }
+            }
     }
 
     /**
@@ -270,21 +421,4 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
             .update(data)
     }
 
-    /**fun getRandomRecipeId() : String {
-        val allRecipesArray = arrayListOf<String>()
-        db.collection(collectionPath)
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    allRecipesArray.add(document.id)
-                }
-                allRecipesArray.random()
-                Log.d("TAG", "Losowy przepis: ${allRecipesArray.random()}")
-            }
-            .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents: ", exception)
-            }
-        return allRecipesArray.random()
-    }
-    **/
 }
