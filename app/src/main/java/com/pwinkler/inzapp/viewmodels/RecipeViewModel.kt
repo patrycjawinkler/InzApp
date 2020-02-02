@@ -75,6 +75,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         currentRecipeList.postValue(newRecipeList)
     }
 
+    /**
+     * Funkcja, która sprawdza czy przepis, który użytkownik
+     * chce usunąć posiada więcej użytkowników
+     * oprócz niego. Jeżeli tak to usuwa id
+     * danego użytkownika z listy, jeżeli nie, usuwa cały dokument.
+     */
     fun deleteRecipe(recipeId: Recipe?) {
         recipeCollection.whereArrayContains("users", fbAuth.currentUser?.uid ?: "").get()
             .addOnSuccessListener {

@@ -20,7 +20,9 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
     private val db = FirebaseFirestore.getInstance()
     private val fbAuth = FirebaseAuth.getInstance()
     private val collectionPath = "/shopping_lists"
+    private val productCollectionPath = "/products"
     private val shoppingListCollection = db.collection(collectionPath)
+    private val productCollection = db.collection(productCollectionPath)
     private var shoppingList: ShoppingList? = null
 
     val currentShoppingList = MutableLiveData<List<ShoppingList>>()
@@ -112,6 +114,28 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
                     }
                 }
             }
+    }
+
+    /**
+     * Funkcja, która dodaje składniki wybranego przepisu
+     * do listy zakupów
+     */
+    fun addIngredientsFromRecipeToShoppingList(ingredientsList: ArrayList<String>) {
+        val productsList = arrayListOf<String>()
+        for (i in 0 until ingredientsList.size) {
+            val productReference = productCollection.document(ingredientsList[i])
+            productReference.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val productName = document.getString("name")
+                        val productQuantity = document.getString("quantity")
+                        val productUnit = document.getString("unit")
+                        val product = "$productName $productQuantity $productUnit"
+                        productsList.add(product)
+                    }
+                    addShoppingList("Produkty z przepisu", productsList)
+                }
+        }
     }
 
     /**

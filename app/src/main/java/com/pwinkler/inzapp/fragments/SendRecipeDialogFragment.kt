@@ -66,6 +66,11 @@ class SendRecipeDialogFragment : DialogFragment() {
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
+    /**
+     * Funkcja sprawdza czy podany użytkownik istnieje,
+     * jeżeli tak to wysyła mu przepis,
+     * jeżeli nie to aplikacja wyświetla stosowny komunikat
+     */
     private fun proceedIfUserExist(email: String) {
         db.collection("users")
             .whereEqualTo("email", email)

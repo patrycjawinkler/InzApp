@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -26,7 +27,9 @@ import com.pwinkler.inzapp.helpers.DpSize
 import com.pwinkler.inzapp.models.Recipe
 import com.pwinkler.inzapp.models.User
 import com.pwinkler.inzapp.viewmodels.RecipeViewModel
+import com.pwinkler.inzapp.viewmodels.ShoppingListViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListener, DeleteRecipeDialogFragment.ModalListener {
 
@@ -36,6 +39,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
     private lateinit var navigationDrawer: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var recipeViewModel: RecipeViewModel
+    lateinit var shoppingListViewModel: ShoppingListViewModel
     private lateinit var dpSize: DpSize
 
     private var currentRecipe: Recipe? = null
@@ -289,6 +293,22 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
             }
     }
 
+    //Dodawanie składników przepisu do listy zakupów
+    private fun addIngredientsToShoppingList() {
+        val selectedRecipeId = intent.getStringExtra(EXTRA_RECIPE_ID)
+        val recipeReference = db.collection(recipeCollectionPath).document(selectedRecipeId!!)
+        shoppingListViewModel = ViewModelProviders.of(this@RecipeActivity).get(ShoppingListViewModel::class.java)
+        recipeReference.get()
+            .addOnSuccessListener { document3 ->
+                if (document3 != null) {
+                    val ingredients = document3["ingredients"] as ArrayList<String>
+                    shoppingListViewModel.addIngredientsFromRecipeToShoppingList(ingredients)
+                }
+            }
+        Toast.makeText(this@RecipeActivity, "Składniki zostały dodane do listy zakupów", Toast.LENGTH_LONG).show()
+    }
+
+    //Pokazanie okna dialogowego, służącego do przesyłania przepisów
     private fun showSendRecipeDialog() {
         val dialog = SendRecipeDialogFragment()
         dialog.show(supportFragmentManager, "SendRecipeDialogFragment")
@@ -298,6 +318,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
         recipeViewModel.inviteUser(user, currentRecipe)
     }
 
+    //Pokazanie okna dialogowego, w którym użytkownik jest pytany czy na pewno chce usunąć przepis
     private fun showDeleteRecipeDialog() {
         val dialog = DeleteRecipeDialogFragment()
         dialog.show(supportFragmentManager, "DeleteRecipeDialogFragment")
@@ -312,7 +333,6 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
         finish()
     }
 
-
     /**
      * Dodawanie ikonek do bottom app bar
      */
@@ -324,6 +344,7 @@ class RecipeActivity : AppCompatActivity(), SendRecipeDialogFragment.ModalListen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> navigationDrawer.openDrawer(GravityCompat.START)
+            R.id.app_bar_add_to_list -> addIngredientsToShoppingList()
             R.id.app_bar_add_a_person -> showSendRecipeDialog()
             R.id.app_bar_delete_recipe -> showDeleteRecipeDialog()
         }

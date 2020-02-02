@@ -143,6 +143,7 @@ class AddShoppingListDialogFragment : DialogFragment() {
         }
 
         val itemInput = EditText(activity).apply {
+            inputType = 16384
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
