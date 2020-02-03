@@ -133,9 +133,10 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
                         val product = "$productName $productQuantity $productUnit"
                         productsList.add(product)
                     }
-                    addShoppingList("Produkty z przepisu", productsList)
+                    //addShoppingList("Produkty z przepisu", productsList)
                 }
         }
+        addShoppingList("Produkty z przepisu", productsList)
     }
 
     /**

@@ -227,11 +227,8 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
     override fun onDialogPositiveClick(name: String, items: ArrayList<String>) {
         shoppingListViewModel.addShoppingList(name, items)
-        finish()
-        overridePendingTransition(0, 0)
+        val intent = Intent(this@ShoppingListActivity, ShoppingListActivity::class.java)
         startActivity(intent)
-        overridePendingTransition(0, 0)
-        this.recreate()
     }
 
     private fun showSendShoppingListDialog() {
