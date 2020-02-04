@@ -131,12 +131,17 @@ class ShoppingListViewModel(application: Application) : AndroidViewModel(applica
                         val productQuantity = document.getString("quantity")
                         val productUnit = document.getString("unit")
                         val product = "$productName $productQuantity $productUnit"
+                        Log.d("TAG", "Produkty z przepisu: $product")
                         productsList.add(product)
+                        Log.d("TAG", "Lista produktów: $productsList")
                     }
                     //addShoppingList("Produkty z przepisu", productsList)
                 }
+
         }
+
         addShoppingList("Produkty z przepisu", productsList)
+        Log.d("TAG", "Lista produktów pod addShoppingList: $productsList")
     }
 
     /**

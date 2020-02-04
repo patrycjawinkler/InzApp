@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
@@ -107,63 +108,78 @@ class RandomRecipeActivity: AppCompatActivity() {
         recipeViewModel.getAllUserRecipes()
 
         val drawRecipeButton = findViewById<Button>(R.id.draw_recipe_button)
-        drawRecipeButton.setOnClickListener {
 
-            val allRecipesArray = arrayListOf<String>()
-
-            val recipeListItemContainer = findViewById<ConstraintLayout>(R.id.recipe_list_item_container)
-            val dishImageView = findViewById<ImageView>(R.id.dish_image)
-            val dishNameTextView = findViewById<TextView>(R.id.dish_name)
-            val timeToPrepareIcon = findViewById<ImageView>(R.id.time_ic)
-            val timeToPrepareTextView = findViewById<TextView>(R.id.time_to_prepare)
-            val dishTypeIcon = findViewById<ImageView>(R.id.dish_type_ic)
-            val dishTypeTextView = findViewById<TextView>(R.id.dish_type_text)
-            val mealTypeIcon = findViewById<ImageView>(R.id.meal_type_ic)
-            val mealTypeTextView = findViewById<TextView>(R.id.meal_type_text)
-            val favoriteIcon = findViewById<ImageView>(R.id.favorite_ic)
-            val chosenIcon = findViewById<ImageView>(R.id.chosen_ic)
-
-            db.collection(collectionPath).whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        allRecipesArray.add(document.id)
+        db.collection(collectionPath).whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    drawRecipeButton.setOnClickListener {
+                        Toast.makeText(this@RandomRecipeActivity, "Brak przepisów w bazie danych", Toast.LENGTH_LONG).show()
                     }
-                    val randomRecipeId = allRecipesArray.random()
-                    Log.d("TAG", "Losowy przepis: ${allRecipesArray.random()}")
+                } else {
+                    drawRecipeButton.setOnClickListener {
+                        getRandomRecipe()
+                    }
+                }
+            }
+    }
 
-                    val randomRecipe = db.collection(collectionPath).document(randomRecipeId)
-                    randomRecipe.get()
-                        .addOnSuccessListener { document ->
-                            if (document.getString("image_id")!!.isNotBlank()){
-                                Picasso.get().load(document.getString("image_id")).into(dishImageView)
-                            }
-                            dishNameTextView?.text = document.getString("name")
-                            timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
-                            timeToPrepareTextView?.text = document.getString("time_to_prepare")
-                            dishTypeIcon?.setImageResource(R.drawable.ic_dish_24dp)
-                            dishTypeTextView?.text = document.getString("dish_type")
-                            mealTypeIcon?.setImageResource(R.drawable.ic_meal_type_24dp)
-                            mealTypeTextView?.text = document.getString("meal_type")
-                            if (document.getBoolean("favorite")!!) {
-                                favoriteIcon?.setImageResource(R.drawable.ic_favorite_24dp)
-                            } else {
-                                favoriteIcon?.setImageResource(R.drawable.ic_favorite_border_black_24dp)
-                            }
-                            if (document.getBoolean("chosen")!!) {
-                                chosenIcon?.setImageResource(R.drawable.ic_bookmark_black_24dp)
-                            } else {
-                                chosenIcon?.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
-                            }
+    private fun getRandomRecipe() {
+
+        val allRecipesArray = arrayListOf<String>()
+
+        val recipeListItemContainer = findViewById<ConstraintLayout>(R.id.recipe_list_item_container)
+        val dishImageView = findViewById<ImageView>(R.id.dish_image)
+        val dishNameTextView = findViewById<TextView>(R.id.dish_name)
+        val timeToPrepareIcon = findViewById<ImageView>(R.id.time_ic)
+        val timeToPrepareTextView = findViewById<TextView>(R.id.time_to_prepare)
+        val dishTypeIcon = findViewById<ImageView>(R.id.dish_type_ic)
+        val dishTypeTextView = findViewById<TextView>(R.id.dish_type_text)
+        val mealTypeIcon = findViewById<ImageView>(R.id.meal_type_ic)
+        val mealTypeTextView = findViewById<TextView>(R.id.meal_type_text)
+        val favoriteIcon = findViewById<ImageView>(R.id.favorite_ic)
+        val chosenIcon = findViewById<ImageView>(R.id.chosen_ic)
+
+        db.collection(collectionPath).whereArrayContains("users", fbAuth.currentUser?.uid ?: "")
+            .get()
+            .addOnSuccessListener { documents2 ->
+                for (document in documents2) {
+                    allRecipesArray.add(document.id)
+                }
+                val randomRecipeId = allRecipesArray.random()
+                Log.d("TAG", "Losowy przepis: ${allRecipesArray.random()}")
+
+                val randomRecipe = db.collection(collectionPath).document(randomRecipeId)
+                randomRecipe.get()
+                    .addOnSuccessListener { document ->
+                        if (document.getString("image_id")!!.isNotBlank()){
+                            Picasso.get().load(document.getString("image_id")).into(dishImageView)
                         }
-                    recipeListItemContainer.setOnClickListener {
-                        goToRecipe(randomRecipeId)
+                        dishNameTextView?.text = document.getString("name")
+                        timeToPrepareIcon?.setImageResource(R.drawable.ic_time_24dp)
+                        timeToPrepareTextView?.text = document.getString("time_to_prepare")
+                        dishTypeIcon?.setImageResource(R.drawable.ic_dish_24dp)
+                        dishTypeTextView?.text = document.getString("dish_type")
+                        mealTypeIcon?.setImageResource(R.drawable.ic_meal_type_24dp)
+                        mealTypeTextView?.text = document.getString("meal_type")
+                        if (document.getBoolean("favorite")!!) {
+                            favoriteIcon?.setImageResource(R.drawable.ic_favorite_24dp)
+                        } else {
+                            favoriteIcon?.setImageResource(R.drawable.ic_favorite_border_black_24dp)
+                        }
+                        if (document.getBoolean("chosen")!!) {
+                            chosenIcon?.setImageResource(R.drawable.ic_bookmark_black_24dp)
+                        } else {
+                            chosenIcon?.setImageResource(R.drawable.ic_bookmark_border_black_24dp)
+                        }
                     }
+                recipeListItemContainer.setOnClickListener {
+                    goToRecipe(randomRecipeId)
                 }
-                .addOnFailureListener { exception ->
-                    Log.d("TAG", "Error getting documents: ", exception)
-                }
-        }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "Error getting documents: ", exception)
+            }
     }
 
     /**

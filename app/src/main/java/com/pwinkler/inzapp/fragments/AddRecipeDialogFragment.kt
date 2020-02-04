@@ -127,6 +127,8 @@ class AddRecipeDialogFragment : DialogFragment() {
                         )
                         ingredientList.add(productReference.id)
                         Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
+                        addIngredientToBaseImageButton.setImageResource(R.drawable.ic_check_circle_black_24dp)
+                        addIngredientToBaseImageButton.isEnabled = false
                     }
                 }
 
@@ -295,7 +297,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
         val ingredientInput = EditText(activity).apply {
             hint = "Nazwa składnika"
-            inputType = 16384
+            inputType = 16384 + 65536
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -379,6 +381,8 @@ class AddRecipeDialogFragment : DialogFragment() {
                 )
                 ingredientList.add(productReference.id)
                 Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
+                uploadIcon.setImageResource(R.drawable.ic_check_circle_black_24dp)
+                uploadIcon.isEnabled = false
             }
         }
     }

@@ -1,6 +1,10 @@
 package com.pwinkler.inzapp.controllers
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
@@ -10,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
@@ -86,6 +91,10 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
             setLogoutAction {
                 fbAuth.signOut()
             }
+            setMainActivityAction {
+                val intent = Intent(this@ShoppingListActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
             setRecipeListAction {
                 val intent = Intent(this@ShoppingListActivity, RecipesListActivity::class.java)
                 startActivity(intent)
@@ -114,6 +123,12 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
         shoppingListViewModel = ViewModelProviders.of(this@ShoppingListActivity).get(ShoppingListViewModel::class.java)
         shoppingListViewModel.getUserShoppingList()
+
+        shoppingListViewModel.getInvites()
+        shoppingListViewModel.currentInviteList.observe(this@ShoppingListActivity, Observer {
+            showNewShoppingListNotification()
+        })
+
 
         val shoppingListName = findViewById<TextView>(R.id.shopping_list_name_text_view)
         val shoppingListContainer = findViewById<LinearLayout>(R.id.list_items_container)
@@ -211,6 +226,38 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
         }
     }
 
+    private fun showNewShoppingListNotification() {
+        val shoppingList = shoppingListViewModel.currentShoppingList.value ?: return
+        val invites = shoppingListViewModel.currentInviteList.value ?: return
+        invites
+            .filter {it != ""}
+            .forEach{
+                val list = getShoppingListFromId(shoppingList, it)
+                showNotification("Otrzymałeś listę zakupów: ", list.name)
+            }
+    }
+
+    private fun getShoppingListFromId(shoppingLists: List<ShoppingList>, id: String): ShoppingList {
+        return shoppingLists.first { it.id == id}
+    }
+
+    private fun showNotification(title: String, msg: String) {
+        val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel("YOUR_CHANNEL_ID", "YOUR_CHANNEL_NAME", NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "YOUR_NOTIFICATION_CHANNEL_DESCRIPTION"
+            mNotificationManager.createNotificationChannel(channel)
+        }
+        val mBuilder = NotificationCompat.Builder(applicationContext, "YOUR_CHANNEL_ID")
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)) //ustaw dużą ikonkę aplikacji
+            .setSmallIcon(R.mipmap.ic_launcher) //ustaw małą ikonkę aplikacji
+            .setContentTitle(title) //ustaw tytuł powiadomienia
+            .setContentText(msg) //ustaw wiadomość - nazwę przepisu
+            .setAutoCancel(true) //usuń powiadomienie po kliknięciu
+        mNotificationManager.notify(0, mBuilder.build())
+    }
+
     private fun deleteShoppingList(id: ShoppingList?) {
         shoppingListViewModel.deleteShoppingList(id)
         finish()
@@ -227,8 +274,11 @@ class ShoppingListActivity: AppCompatActivity(), AddShoppingListDialogFragment.M
 
     override fun onDialogPositiveClick(name: String, items: ArrayList<String>) {
         shoppingListViewModel.addShoppingList(name, items)
-        val intent = Intent(this@ShoppingListActivity, ShoppingListActivity::class.java)
+        finish()
+        overridePendingTransition(0, 0)
         startActivity(intent)
+        overridePendingTransition(0, 0)
+        this.recreate()
     }
 
     private fun showSendShoppingListDialog() {

@@ -85,7 +85,7 @@ class RecipesListActivity: AppCompatActivity(), AddRecipeDialogFragment.ModalLis
                 startActivity(intent)
             }
             setRecipeListAction {
-                val intent = Intent(this@RecipesListActivity, ShoppingListActivity::class.java)
+                val intent = Intent(this@RecipesListActivity, RecipesListActivity::class.java)
                 startActivity(intent)
             }
             setShoppingListAction {
