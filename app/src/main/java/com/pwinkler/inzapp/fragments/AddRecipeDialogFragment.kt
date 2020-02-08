@@ -30,7 +30,7 @@ class AddRecipeDialogFragment : DialogFragment() {
 
     private lateinit var listener: ModalListener
     private lateinit var dialogView: View
-    private lateinit var mImageUri : Uri
+    private var mImageUri : Uri? = null
     private lateinit var dpSize: DpSize
 
     private var ingredients = 1
@@ -105,16 +105,20 @@ class AddRecipeDialogFragment : DialogFragment() {
                 addIngredientToBaseImageButton.setOnClickListener {
 
                     //umieszczam je tutaj, bo w momencie naciśniecią przycisku, pola muszą być uzupełnione
-                    val ingredientNameTextInput = (ingredientsLayoutVertical.getChildAt(0) as EditText).text.toString()
-                    val ingredientQuantityTextInput = (detailsLayoutHorizontal.getChildAt(0) as EditText).text.toString()
-                    val ingredientUnitSpinner = (detailsLayoutHorizontal.getChildAt(1) as Spinner).selectedItem.toString()
+                    val ingredientNameTextInput = (ingredientsLayoutVertical.getChildAt(0) as EditText)
+                    val ingredientQuantityTextInput = (detailsLayoutHorizontal.getChildAt(0) as EditText)
+                    val ingredientUnitSpinner = (detailsLayoutHorizontal.getChildAt(1) as Spinner)
 
-                    if (ingredientNameTextInput.isBlank() || ingredientQuantityTextInput.isBlank() || ingredientUnitSpinner.isBlank()) {
+                    val ingredientNameText = ingredientNameTextInput.text.toString()
+                    val ingredientQuantityText = ingredientQuantityTextInput.text.toString()
+                    val ingredientUnitSpinnerChosen = ingredientUnitSpinner.selectedItem.toString()
+
+                    if (ingredientNameText.isBlank() || ingredientQuantityText.isBlank() || ingredientUnitSpinnerChosen.isBlank()) {
                         Toast.makeText(activity, "Proszę uzupełnić szczegóły składników", Toast.LENGTH_LONG).show()
                     } else {
                         val productReference = db.collection(collectionPath).document()
 
-                        val updatedProduct = Product(productReference.id, ingredientNameTextInput, ingredientQuantityTextInput, ingredientUnitSpinner)
+                        val updatedProduct = Product(productReference.id, ingredientNameText, ingredientQuantityText, ingredientUnitSpinnerChosen)
 
                         productReference.set(
                             HashMap<String, Any>().apply {
@@ -129,6 +133,11 @@ class AddRecipeDialogFragment : DialogFragment() {
                         Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
                         addIngredientToBaseImageButton.setImageResource(R.drawable.ic_check_circle_black_24dp)
                         addIngredientToBaseImageButton.isEnabled = false
+                        ingredientNameTextInput.isCursorVisible = false
+                        ingredientNameTextInput.isEnabled = false
+                        ingredientQuantityTextInput.isCursorVisible = false
+                        ingredientQuantityTextInput.isEnabled = false
+                        ingredientUnitSpinner.isEnabled = false
                     }
                 }
 
@@ -235,36 +244,41 @@ class AddRecipeDialogFragment : DialogFragment() {
                         val photoUid = UUID.randomUUID().toString()
                         val imageRef = storageReference.child("images/$photoUid")
 
-                        imageRef.putFile(mImageUri).apply {
-                            progressBar.visibility = View.VISIBLE
-                            addOnSuccessListener {
-                                if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
-                                    Toast.makeText(
-                                        activity,
-                                        "Proszę uzupełnić brakujące pola",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                } else if (ingredientList.size < 1) {
-                                    Toast.makeText(
-                                        activity,
-                                        "Proszę uzupełnić składniki",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                } else {
-                                    imageRef.downloadUrl.addOnSuccessListener {  uri ->
-                                        listener.onDialogPositiveClick(
-                                            recipeNameTextEdit.text.toString(),
-                                            descriptionTextEdit.text.toString(),
-                                            uri.toString(),
-                                            timeToPrepareSpinner.selectedItem.toString(),
-                                            mealTypeSpinner.selectedItem.toString(),
-                                            dishTypeSpinner.selectedItem.toString(),
-                                            ingredientList,
-                                            favorite,
-                                            chosen
-                                        )
-                                        progressBar.visibility = View.GONE
-                                        dialog.dismiss()
+                        if (mImageUri == null) {
+                            Toast.makeText(activity, "Proszę dodać zdjęcie", Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            imageRef.putFile(mImageUri!!).apply {
+                                progressBar.visibility = View.VISIBLE
+                                addOnSuccessListener {
+                                    if (recipeNameTextEdit.text.toString().isBlank() || descriptionTextEdit.text.toString().isBlank()) {
+                                        Toast.makeText(
+                                            activity,
+                                            "Proszę uzupełnić brakujące pola",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else if (ingredientList.size < 1) {
+                                        Toast.makeText(
+                                            activity,
+                                            "Proszę uzupełnić składniki",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    } else {
+                                        imageRef.downloadUrl.addOnSuccessListener { uri ->
+                                            listener.onDialogPositiveClick(
+                                                recipeNameTextEdit.text.toString(),
+                                                descriptionTextEdit.text.toString(),
+                                                uri.toString(),
+                                                timeToPrepareSpinner.selectedItem.toString(),
+                                                mealTypeSpinner.selectedItem.toString(),
+                                                dishTypeSpinner.selectedItem.toString(),
+                                                ingredientList,
+                                                favorite,
+                                                chosen
+                                            )
+                                            progressBar.visibility = View.GONE
+                                            dialog.dismiss()
+                                        }
                                     }
                                 }
                             }
@@ -383,6 +397,12 @@ class AddRecipeDialogFragment : DialogFragment() {
                 Toast.makeText(activity, "Składnik został dodany", Toast.LENGTH_LONG).show()
                 uploadIcon.setImageResource(R.drawable.ic_check_circle_black_24dp)
                 uploadIcon.isEnabled = false
+                ingredientInput.isCursorVisible = false
+                ingredientInput.isEnabled = false
+                quantityInput.isCursorVisible = false
+                quantityInput.isEnabled = false
+                unitsSpinner.isEnabled = false
+
             }
         }
     }
